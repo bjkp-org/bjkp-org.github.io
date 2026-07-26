@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>भारतीय जन कल्याण पार्टी (BJKP)</title>
+    <!-- Fonts & Icons -->
+    <link href="https://googleapis.com" rel="stylesheet">
+    <link rel="stylesheet" href="https://cloudflare.com">
+    
+    <style>
+        /* CSS Reset & Variables */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        :root {
+            --maroon: #800020;
+            --gold: #D4AF37;
+            --white: #FFFFFF;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --saffron: #FF9933;
+            --green: #138808;
+        }
+        body { background-color: var(--light); color: var(--dark); line-height: 1.6; }
+
+        /* Top Alert Bar */
+        .top-bar { background: var(--maroon); color: var(--gold); text-align: center; padding: 10px; font-weight: bold; font-size: 0.95rem; border-bottom: 2px solid var(--gold); }
+
+        /* Header Navigation */
+        header { background: var(--white); box-shadow: 0 4px 12px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000; }
+        .nav-container { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; padding: 10px 20px; }
+        .logo-area { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .logo-img { width: 55px; height: 55px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold); }
+        .logo-text { font-family: 'Yatra One', cursive; font-size: 1.4rem; color: var(--maroon); font-weight: bold; }
+        
+        .nav-links { display: flex; list-style: none; gap: 20px; }
+        .nav-links a { text-decoration: none; color: var(--dark); font-weight: 600; font-size: 0.95rem; cursor: pointer; transition: 0.3s; padding: 8px 12px; border-radius: 4px; }
+        .nav-links a:hover, .nav-links a.active { color: var(--white); background: var(--maroon); }
+
+        /* Page Content Control */
+        .page-section { display: none; padding: 50px 20px; max-width: 1200px; margin: 0 auto; }
+        .page-section.active { display: block; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Section Heading */
+        .section-title { text-align: center; font-size: 2.2rem; color: var(--maroon); margin-bottom: 40px; font-family: 'Yatra One', cursive; }
+        .section-title::after { content: ''; display: block; width: 100px; height: 4px; background: var(--gold); margin: 10px auto 0 auto; border-radius: 2px; }
+
+        /* --- HOME PAGE HERO --- */
+        .hero { background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://unsplash.com') no-repeat center center/cover; height: 70vh; display: flex; align-items: center; justify-content: center; text-align: center; color: white; padding: 0 20px; }
+        .hero-content h1 { font-size: 3.2rem; color: var(--gold); font-family: 'Yatra One', cursive; margin-bottom: 15px; text-shadow: 2px 2px 4px rgba(0,0,0,0.6); }
+        .hero-content p { font-size: 1.8rem; font-weight: 600; margin-bottom: 30px; color: #fff; text-shadow: 1px 1px 3px rgba(0,0,0,0.5); }
+        
+        .cta-btn { display: inline-block; background: var(--maroon); color: var(--gold); padding: 14px 35px; border-radius: 30px; text-decoration: none; font-weight: bold; transition: 0.3s; border: 2px solid var(--gold); cursor: pointer; font-size: 1.1rem; }
+        .cta-btn:hover { background: var(--gold); color: var(--maroon); transform: translateY(-2px); }
+
+        /* --- ISSUES / MUDDA GRID --- */
+        .issues-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin-top: 20px; }
+        .issue-card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-top: 4px solid var(--maroon); transition: 0.3s; text-align: center; }
+        .issue-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
+        .issue-icon { font-size: 2.5rem; color: var(--gold); margin-bottom: 15px; }
+        .issue-card h3 { color: var(--maroon); margin-bottom: 10px; font-size: 1.3rem; }
+
+        /* --- LEADERSHIP BOX --- */
+        .leader-section { display: flex; gap: 40px; align-items: center; flex-wrap: wrap; background: white; padding: 40px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-top: 20px; }
+        .leader-img-box { flex: 1; min-width: 250px; text-align: center; }
+        .leader-avatar { width: 200px; height: 200px; border-radius: 50%; border: 4px solid var(--maroon); background: #f1f5f9; display: inline-flex; align-items: center; justify-content: center; font-size: 5rem; color: #cbd5e1; }
+        .leader-info { flex: 2; min-width: 300px; }
+        .leader-info h3 { font-size: 1.8rem; color: var(--maroon); }
+        .leader-tag { font-weight: bold; color: var(--gold); background: var(--maroon); display: inline-block; padding: 3px 15px; border-radius: 20px; margin-top: 5px; font-size: 0.9rem; }
+        .leader-quote { font-style: italic; font-size: 1.2rem; color: #475569; margin-top: 20px; border-left: 4px solid var(--gold); padding-left: 15px; }
+
+        /* --- JOIN FORM --- */
+        .form-wrapper { background: white; max-width: 600px; margin: 0 auto; padding: 40px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 2px solid var(--gold); border-top: 6px solid var(--maroon); }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--dark); }
+        .form-group input, .form-group select { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 1rem; }
+        .form-group input:focus, .form-group select:focus { border-color: var(--maroon); outline: none; }
+
+        /* --- CONTACT BOX --- */
+        .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .contact-card { background: white; padding: 30px; border-radius: 12px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .contact-card i { font-size: 2.5rem; color: var(--maroon); margin-bottom: 15px; }
+        .contact-card p { font-size: 1.1rem; color: #475569; font-weight: 600; }
+
+        /* Footer */
+        footer { background: var(--maroon); color: var(--white); text-align: center; padding: 35px 20px; margin-top: 60px; border-top: 3px solid var(--gold); }
+        footer p { font-size: 0.95rem; color: #f1f5f9; }
+        .footer-tagline { font-family: 'Yatra One', cursive; color: var(--gold); font-size: 1.2rem; margin-bottom: 15px; }
+        .social-icons { margin-top: 20px; display: flex; justify-content: center; gap: 25px; font-size: 1.6rem; }
+        .social-icons a { color: var(--gold); transition: 0.3s; text-decoration: none; }
+        .social-icons a:hover { color: white; transform: scale(1.2); }
+
+        /* Responsive Mobile Layout */
+        @media (max-width: 768px) {
+            .nav-container { flex-direction: column; gap: 15px; }
+            .nav-links { font-size: 0.85rem; gap: 10px; flex-wrap: wrap; justify-content: center; }
+            .hero-content h1 { font-size: 2.2rem; }
+            .hero-content p { font-size: 1.2rem; }
+            .leader-section { flex-direction: column; text-align: center; }
+            .leader-quote { border-left: none; border-top: 2px solid var(--gold); padding: 15px 0 0 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Announcement Bar -->
+    <div class="top-bar"><i class="fa-solid fa-star"></i> राष्ट्र प्रथम • जन सेवा सर्वोपरि <i class="fa-solid fa-star"></i></div>
+
+    <!-- Navigation Header -->
+    <header>
+        <div class="nav-container">
+            <!-- लोगो फाइल का नाम 'logo.png' रखें, यह ऑटोमैटिक दिखने लगेगा -->
+            <a class="logo-area" onclick="switchPage('home')">
+                <img src="logo.png" alt="BJKP Logo" class="logo-img" onerror="this.src='https://placehold.co'">
+                <span class="logo-text">भारतीय जन कल्याण पार्टी</span>
+            </a>
+            <ul class="nav-links">
+                <li><a id="link-home" class="active" onclick="switchPage('home')">मुख्य पृष्ठ</a></li>
+                <li><a id="link-about" onclick="switchPage('about')">नेतृत्व एवं विचारधारा</a></li>
+                <li><a id="link-issues" onclick="switchPage('issues')">हमारे मुद्दे</a></li>
+                <li><a id="link-join" onclick="switchPage('join')">सदस्य बनें</a></li>
+                <li><a id="link-contact" onclick="switchPage('contact')">संपर्क करें</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- 1. HOME PAGE SECTION -->
+    <section id="page-home" class="page-section active">
+        <div class="hero">
+            <div class="hero-content">
+                <h1>भारतीय जन कल्याण पार्टी (BJKP)</h1>
+                <p>"जन-जन का विश्वास, राष्ट्र का विकास"</p>
+                <button class="cta-btn" onclick="switchPage('join')"><i class="fa-solid fa-pen-fancy"></i> डिजिटल सदस्यता लें</button>
+            </div>
+        </div>
+        
+        <div style="margin-top: 50px; text-align: center; padding: 20px; background: white; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.02);">
+            <h2 style="color: var(--maroon); font-family: 'Yatra One', cursive;">पार्टी का मुख्य उद्देश्य</h2>
+            <p style="max-width: 800px; margin: 15px auto 0 auto; font-size: 1.1rem; color: #475569;">
