@@ -69,16 +69,68 @@ $("year").textContent=new Date().getFullYear();
 $("brandLogo").src=$("heroLogo").src=$("footerLogo").src=localStorage.getItem("bjkp_logo")||defaultLogo;
 
 $("hamb").onclick=()=>$("links").classList.toggle("open");
-let members=JSON.parse(localStorage.getItem("bjkp_members")||"[]");
-let manifesto=localStorage.getItem("bjkp_manifesto")||"हमारा प्रारंभिक घोषणापत्र राष्ट्रहित, नागरिक सम्मान, सुशासन, शिक्षा, स्वास्थ्य, रोजगार, किसान कल्याण, ग्रामीण विकास, पारदर्शिता और पर्यावरणीय जिम्मेदारी पर केंद्रित है।";
-$("manifestoText").innerHTML="<p>"+manifesto.replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\n/g,"<br>")+"</p>";
-function renderMembers(){
- $("memberGrid").innerHTML=members.length?members.map((m,i)=>`<div class="member"><strong>${esc(m.name)}</strong><small>${esc(m.role)}</small><p>${esc(m.desc||"")}</p></div>`).join(""):"<div class='card'><p>अभी कोई सदस्य नहीं जोड़ा गया है।</p></div>";
- $("adminMembers").innerHTML=members.map((m,i)=>`<div class="item"><span><b>${esc(m.name)}</b> — ${esc(m.role)}</span><button class="btn danger" onclick="removeMember(${i})">हटाएँ</button></div>`).join("");
+let members = [];
+
+async function loadMembers(){
+  const { data, error } = await supabase
+    .from("members")
+    .select("*")
+    .order("id", { ascending: true });
+
+  if(error){
+    console.error(error);
+    return;
+  }
+
+  members = data || [];
+  renderMembers();
 }
-function esc(s){return String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
-function removeMember(i){members.splice(i,1);localStorage.setItem("bjkp_members",JSON.stringify(members));renderMembers()}
-renderMembers();
+
+function renderMembers(){
+  $("#memberGrid").innerHTML = members.length
+    ? members.map(m =>
+      `<div class="member">
+        <strong>${esc(m.name)}</strong>
+        <small>${esc(m.role || "")}</small>
+      </div>`
+    ).join("")
+    : "";
+    
+  $("#adminMembers").innerHTML = members.map((m,i) =>
+    `<div class="item">
+      <span>${esc(m.name)} — ${esc(m.role || "")}</span>
+      <button onclick="removeMember(${i})">हटाएँ</button>
+    </div>`
+  ).join("");
+}
+
+function esc(s){
+  return String(s || "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;");
+}
+
+async function removeMember(i){
+  const member = members[i];
+
+  if(!member) return;
+
+  const { error } = await supabase
+    .from("members")
+    .delete()
+    .eq("id", member.id);
+
+  if(error){
+    alert("सदस्य हटाया नहीं जा सका");
+    return;
+  }
+
+  loadMembers();
+}
+
+loadMembers();
 
 const PASSWORD="BJKP@2026"; // इसे बदल दें
 $("login").onclick=()=>{
@@ -87,11 +139,32 @@ $("login").onclick=()=>{
 };
 $("logout").onclick=()=>{$("dashboard").classList.add("hidden");$("loginBox").classList.remove("hidden");$("pass").value=""};
 
-$("addMember").onclick=()=>{
- const name=$("memberName").value.trim(),role=$("memberRole").value.trim(),desc=$("memberDesc").value.trim();
- if(!name||!role){alert("नाम और पद भरें");return}
- members.push({name,role,desc});localStorage.setItem("bjkp_members",JSON.stringify(members));renderMembers();
- $("memberName").value=$("memberRole").value=$("memberDesc").value="";
+ $("#addMember").onclick = async () => {
+  const name = $("#memberName").value.trim();
+  const role = $("#memberRole").value.trim();
+  const desc = $("#memberDesc").value.trim();
+
+  if (!name || !role) {
+    alert("नाम और पद भरें");
+    return;
+  }
+
+  const { error } = await supabase
+    .from("members")
+    .insert([{ name, role, description: desc }]);
+
+  if (error) {
+    alert("सदस्य सेव नहीं हुआ");
+    console.error(error);
+    return;
+  }
+
+  $("#memberName").value = "";
+  $("#memberRole").value = "";
+  $("#memberDesc").value = "";
+
+  await loadMembers();
+  alert("सदस्य जोड़ दिया गया");
 };
 $("saveManifesto").onclick=()=>{
  manifesto=$("manifestoEdit").value.trim()||manifesto;localStorage.setItem("bjkp_manifesto",manifesto);
