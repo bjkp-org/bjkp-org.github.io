@@ -1,0 +1,20 @@
+BJKP COMPLETE WEBSITE — SETUP GUIDE
+
+1. इस ZIP को Netlify पर deploy करें; index.html root में है.
+2. Supabase project बनाएं.
+3. Supabase > SQL Editor में SUPABASE_SETUP.sql पूरा run करें.
+4. Supabase > Authentication > Users > Add user से admin email/password बनाएं.
+5. Supabase Project Settings > API से Project URL और public anon key copy करें.
+6. config.js में:
+   window.BJKP_SUPABASE_URL = "https://YOURPROJECT.supabase.co";
+   window.BJKP_SUPABASE_ANON_KEY = "YOUR_PUBLIC_ANON_KEY";
+   केवल public anon key इस्तेमाल करें; service_role key कभी नहीं.
+7. ZIP को दोबारा Netlify पर deploy करें.
+8. वेबसाइट में footer का "Admin" खोलकर admin login करें.
+9. Admin Panel से समाचार, घोषणाएँ, पदाधिकारी, गैलरी और वीडियो manage करें.
+10. Membership form के submissions Admin Panel में दिखेंगे.
+
+महत्वपूर्ण:
+- अभी Gallery URL-based है; इससे website सुरक्षित और सरल रहती है.
+- Domain बाद में Netlify में custom domain से जोड़ सकते हैं.
+- Supabase config के बिना website demo content दिखाती है; config जोड़ने के बाद live database content दिखेगा.
