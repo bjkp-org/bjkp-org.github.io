@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="hi">
 <head>
+
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
@@ -9,6 +10,7 @@
 <link rel="stylesheet" href="style.css">
 
 <style>
+
 .party-logo{
   width:55px;
   height:55px;
@@ -30,6 +32,7 @@
   background-image:
     linear-gradient(rgba(170,0,0,.82),rgba(170,0,0,.82)),
     url("images/banner.jpg");
+
   background-size:cover;
   background-position:center;
 }
@@ -47,6 +50,24 @@
 .president-card{
   text-align:center;
 }
+
+/* ================================
+   MEMBER PHOTO PREVIEW
+================================ */
+
+.photo-preview{
+  width:110px;
+  height:130px;
+  object-fit:cover;
+  display:none;
+  margin:10px auto;
+  border:2px solid #8b0000;
+  border-radius:8px;
+}
+
+/* ================================
+   ID CARD
+================================ */
 
 .idcard{
   max-width:400px;
@@ -72,11 +93,17 @@
   border-radius:8px;
   margin:10px auto;
 }
+
 </style>
 
 </head>
 
 <body>
+
+
+<!-- ================================
+     HEADER
+================================ -->
 
 <header>
 
@@ -89,51 +116,89 @@ class="party-logo"
 >
 
 <div>
+
 <b>भारतीय जन कल्याण पार्टी</b>
-<small>राष्ट्र प्रथम • जन सेवा सर्वोपरि</small>
+
+<small>
+राष्ट्र प्रथम • जन सेवा सर्वोपरि
+</small>
+
 </div>
 
 </div>
+
 
 <nav>
+
 <a href="#home">होम</a>
-<a href="#about">हमारे बारे में</a>
-<a href="#policies">नीतियाँ</a>
-<a href="#membership">सदस्य बनें</a>
-<a href="admin.html">Admin</a>
+
+<a href="#about">
+हमारे बारे में
+</a>
+
+<a href="#policies">
+नीतियाँ
+</a>
+
+<a href="#membership">
+सदस्य बनें
+</a>
+
+<a href="admin.html">
+Admin
+</a>
+
 </nav>
 
 </header>
 
 
-<!-- HOME -->
+<!-- ================================
+     HOME
+================================ -->
 
 <section id="home" class="hero">
 
-<h1>जन सेवा के लिए जुड़िए</h1>
+<h1>
+जन सेवा के लिए जुड़िए
+</h1>
 
 <p>
 भारतीय जन कल्याण पार्टी के डिजिटल सदस्यता मंच पर आपका स्वागत है।
 </p>
 
-<a class="btn" href="#membership">
+<a
+class="btn"
+href="#membership"
+>
 ऑनलाइन सदस्य बनें
 </a>
 
 </section>
 
 
-<!-- ABOUT -->
+<!-- ================================
+     ABOUT
+================================ -->
 
-<section id="about" class="section">
+<section
+id="about"
+class="section"
+>
 
-<h2>हमारे बारे में</h2>
+<h2>
+हमारे बारे में
+</h2>
 
 <p>
-भारतीय जन कल्याण पार्टी (BJKP) जनसेवा, सुशासन,
-पारदर्शिता, शिक्षा, रोजगार, किसान एवं ग्रामीण विकास
+
+भारतीय जन कल्याण पार्टी (BJKP)
+जनसेवा, सुशासन, पारदर्शिता,
+शिक्षा, रोजगार, किसान एवं ग्रामीण विकास
 और युवा सहभागिता को प्राथमिकता देती है।
+
 </p>
+
 
 <div class="card president-card">
 
@@ -143,28 +208,46 @@ alt="राष्ट्रीय अध्यक्ष अजीत कुमा
 class="president-photo"
 >
 
-<b>राष्ट्रीय अध्यक्ष:</b>
+<b>
+राष्ट्रीय अध्यक्ष:
+</b>
 
-<p>अजीत कुमार</p>
+<p>
+अजीत कुमार
+</p>
 
 </div>
 
 </section>
 
 
-<!-- POLICIES -->
+<!-- ================================
+     POLICIES
+================================ -->
 
-<section id="policies" class="section">
+<section
+id="policies"
+class="section"
+>
 
-<h2>प्रमुख नीतियाँ</h2>
+<h2>
+प्रमुख नीतियाँ
+</h2>
+
 
 <div class="grid">
 
-<div class="card">शिक्षा</div>
+<div class="card">
+शिक्षा
+</div>
 
-<div class="card">स्वास्थ्य</div>
+<div class="card">
+स्वास्थ्य
+</div>
 
-<div class="card">रोजगार</div>
+<div class="card">
+रोजगार
+</div>
 
 <div class="card">
 किसान एवं ग्रामीण विकास
@@ -183,19 +266,35 @@ class="president-photo"
 </section>
 
 
-<!-- MEMBERSHIP -->
+<!-- ================================
+     MEMBERSHIP
+================================ -->
 
-<section id="membership" class="section">
+<section
+id="membership"
+class="section"
+>
 
-<h2>ऑनलाइन सदस्यता</h2>
+<h2>
+ऑनलाइन सदस्यता
+</h2>
 
-<form id="memberForm">
+
+<form
+id="memberForm"
+>
+
+
+<!-- NAME -->
 
 <input
 name="name"
 placeholder="पूरा नाम"
 required
 >
+
+
+<!-- MOBILE -->
 
 <input
 name="mobile"
@@ -206,17 +305,26 @@ maxlength="10"
 required
 >
 
+
+<!-- EMAIL -->
+
 <input
 name="email"
 type="email"
 placeholder="ईमेल"
 >
 
+
+<!-- DISTRICT -->
+
 <input
 name="district"
 placeholder="जिला"
 required
 >
+
+
+<!-- ROLE -->
 
 <select name="role">
 
@@ -234,6 +342,38 @@ required
 
 </select>
 
+
+<!-- ================================
+     MEMBER PHOTO
+================================ -->
+
+<label>
+<b>सदस्य का फोटो</b>
+</label>
+
+<input
+type="file"
+name="photo"
+id="memberPhoto"
+accept="image/jpeg,image/png,image/webp"
+required
+>
+
+
+<img
+id="photoPreview"
+class="photo-preview"
+alt="फोटो Preview"
+>
+
+
+<small>
+JPG / PNG / WEBP फोटो अपलोड करें
+</small>
+
+
+<!-- CONSENT -->
+
 <label>
 
 <input
@@ -246,25 +386,37 @@ required
 
 </label>
 
+
+<!-- SUBMIT -->
+
 <button
 class="btn"
 type="submit"
 >
+
 सदस्यता आवेदन भेजें
+
 </button>
 
+
 </form>
+
 
 <div id="result"></div>
 
 </section>
 
 
-<!-- MEMBER VERIFICATION -->
+<!-- ================================
+     MEMBER VERIFICATION
+================================ -->
 
 <section class="section">
 
-<h2>सदस्य सत्यापन</h2>
+<h2>
+सदस्य सत्यापन
+</h2>
+
 
 <div class="verify">
 
@@ -273,21 +425,27 @@ id="verifyId"
 placeholder="BJKP-XXXXXX"
 >
 
+
 <button
 class="btn"
 onclick="verifyMember()"
 >
+
 Verify
+
 </button>
 
 </div>
+
 
 <div id="verifyResult"></div>
 
 </section>
 
 
-<!-- FOOTER -->
+<!-- ================================
+     FOOTER
+================================ -->
 
 <footer>
 
@@ -297,7 +455,9 @@ Verify
 </footer>
 
 
-<!-- SUPABASE -->
+<!-- ================================
+     SUPABASE
+================================ -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -305,10 +465,74 @@ Verify
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
-<script src="app.js?v=3"></script>
+<script src="app.js?v=4"></script>
 
-</body>
-</html>
+
+<!-- PHOTO PREVIEW -->
+
+<script>
+
+const photoInput =
+document.getElementById("memberPhoto");
+
+const photoPreview =
+document.getElementById("photoPreview");
+
+
+if(photoInput){
+
+  photoInput.addEventListener(
+    "change",
+    function(){
+
+      const file =
+      this.files[0];
+
+      if(!file){
+
+        photoPreview.style.display =
+        "none";
+
+        return;
+      }
+
+      if(file.size > 2 * 1024 * 1024){
+
+        alert(
+          "फोटो का आकार 2 MB से कम होना चाहिए।"
+        );
+
+        this.value = "";
+
+        photoPreview.style.display =
+        "none";
+
+        return;
+      }
+
+      const reader =
+      new FileReader();
+
+      reader.onload =
+      function(e){
+
+        photoPreview.src =
+        e.target.result;
+
+        photoPreview.style.display =
+        "block";
+
+      };
+
+      reader.readAsDataURL(file);
+
+    }
+  );
+
+}
+
+</script>
+
 
 </body>
 </html>
