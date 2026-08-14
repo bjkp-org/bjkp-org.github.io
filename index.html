@@ -68,10 +68,18 @@
     </select>
 
     <label class="photo-label">
-      सदस्य की फोटो
-      <input name="photo" id="memberPhoto" type="file" accept="image/jpeg,image/png,image/webp" capture="user" required>
-      <small>फोन से कैमरा या गैलरी से फोटो चुन सकते हैं।</small>
-    </label>
+  सदस्य की फोटो
+
+  <input
+    name="photo"
+    id="memberPhoto"
+    type="file"
+    accept="image/*"
+    required
+  >
+
+  <small>फोन से Camera या Gallery/Photos से फोटो चुनें।</small>
+</label>
 
     <img id="photoPreview" class="photo-preview" alt="Photo Preview" hidden>
 
