@@ -1,5 +1,15 @@
-let sb=null;
-async function loadSB(){if(sb)return sb;if(typeof SUPABASE==="undefined")return null;sb=SUPABASE.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);return sb}
+let sb = null;
+
+async function loadSB() {
+  if (sb) return sb;
+
+  if (typeof supabase === "undefined") {
+    return null;
+  }
+
+  sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  return sb;
+}
 function makeId(){return "BJKP-"+Math.random().toString(36).slice(2,8).toUpperCase()}
 async function submitMembership(e){e.preventDefault();const f=new FormData(e.target);const data={member_id:makeId(),name:f.get("name"),mobile:f.get("mobile"),email:f.get("email")||null,district:f.get("district"),role:f.get("role"),status:"pending"};const client=await loadSB();if(!client){document.getElementById("result").innerHTML='<p class="error">Database अभी connect नहीं है। पहले config.js में Supabase settings डालें।</p>';return}
 const {error}=await client.from("members").insert(data);if(error){document.getElementById("result").innerHTML='<p class="error">आवेदन जमा नहीं हुआ।</p>';return}
