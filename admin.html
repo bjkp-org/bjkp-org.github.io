@@ -1,6 +1,147 @@
-<!doctype html><html lang="hi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BJKP Admin Panel</title><link rel="stylesheet" href="style.css"></head>
-<body><header><div class="brand"><div class="logo">BJKP</div><div><b>Admin Panel</b><small>सदस्य प्रबंधन</small></div></div><a class="btn" href="index.html">Website</a></header>
-<main class="section"><div id="loginBox" class="card"><h2>Admin Login</h2><p>Supabase credentials/config लगाने के बाद ही live admin इस्तेमाल करें।</p><input id="adminEmail" type="email" placeholder="Admin Email"><input id="adminPassword" type="password" placeholder="Password"><button class="btn" onclick="adminLogin()">Login</button><div id="loginMsg"></div></div>
-<div id="dashboard" hidden><div class="stats"><div class="card"><b id="total">0</b><small>Total</small></div><div class="card"><b id="pending">0</b><small>Pending</small></div><div class="card"><b id="approved">0</b><small>Approved</small></div></div>
-<h2>Membership Applications</h2><div class="tableWrap"><table><thead><tr><th>ID</th><th>नाम</th><th>मोबाइल</th><th>जिला</th><th>स्थिति</th><th>Action</th></tr></thead><tbody id="members"></tbody></table></div><button class="btn" onclick="adminLogout()">Logout</button></div></main>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="config.js"></script><script src="app.js"></script></body></html>
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BJKP Admin Panel</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+  <div class="brand">
+    <div class="logo">BJKP</div>
+    <div>
+      <b>Admin Panel</b>
+      <small>सदस्य एवं समाचार प्रबंधन</small>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+    <a class="btn" href="index.html">Website</a>
+
+    <!-- NEWS ADMIN BUTTON -->
+    <a class="btn red" href="admin-news.html">
+      📰 News Management
+    </a>
+  </div>
+</header>
+
+<main class="section">
+
+  <!-- LOGIN -->
+  <div id="loginBox" class="card">
+    <h2>Admin Login</h2>
+
+    <p>
+      Supabase credentials/config लगाने के बाद ही live admin इस्तेमाल करें।
+    </p>
+
+    <input
+      id="adminEmail"
+      type="email"
+      placeholder="Admin Email"
+    >
+
+    <input
+      id="adminPassword"
+      type="password"
+      placeholder="Password"
+    >
+
+    <button class="btn" onclick="adminLogin()">
+      Login
+    </button>
+
+    <div id="loginMsg"></div>
+  </div>
+
+
+  <!-- DASHBOARD -->
+  <div id="dashboard" hidden>
+
+    <div class="stats">
+
+      <div class="card">
+        <b id="total">0</b>
+        <small>Total</small>
+      </div>
+
+      <div class="card">
+        <b id="pending">0</b>
+        <small>Pending</small>
+      </div>
+
+      <div class="card">
+        <b id="approved">0</b>
+        <small>Approved</small>
+      </div>
+
+    </div>
+
+
+    <!-- NEWS MANAGEMENT -->
+    <div class="card" style="margin:20px 0;padding:20px;">
+
+      <h2>📰 News Management</h2>
+
+      <p>
+        वेबसाइट पर नई खबर जोड़ने, प्रकाशित करने और पुरानी खबरों को
+        Manage करने के लिए News Admin Panel खोलें।
+      </p>
+
+      <a
+        href="admin-news.html"
+        class="btn red"
+        style="display:inline-block;margin-top:8px;"
+      >
+        📰 News Admin खोलें →
+      </a>
+
+    </div>
+
+
+    <!-- MEMBERSHIP -->
+    <h2>Membership Applications</h2>
+
+    <div class="tableWrap">
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>नाम</th>
+            <th>मोबाइल</th>
+            <th>जिला</th>
+            <th>स्थिति</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+
+        <tbody id="members"></tbody>
+
+      </table>
+
+    </div>
+
+
+    <button class="btn" onclick="adminLogout()">
+      Logout
+    </button>
+
+  </div>
+
+</main>
+
+
+<!-- SUPABASE -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="config.js"></script>
+
+<script src="app.js"></script>
+
+</body>
+</html>
