@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BJKP | सदस्यता प्रमाण-पत्र</title>
+<link rel="stylesheet" href="certificate.css">
+</head>
+<body>
+<div class="page">
+  <div class="search-box">
+    <img src="images/logo.png" class="logo" alt="BJKP Logo">
+    <h1>सदस्यता प्रमाण-पत्र</h1>
+    <p>अपनी Approved Member ID डालें</p>
+    <div class="search-row">
+      <input id="memberId" placeholder="BJKP-XXXXXX" autocomplete="off">
+      <button onclick="findCertificate()">प्रमाण-पत्र देखें</button>
+    </div>
+    <p id="msg"></p>
+  </div>
+
+  <div id="certificate" class="certificate" hidden>
+    <div class="top-line"></div>
+    <header>
+      <img src="images/logo.png" class="cert-logo" alt="BJKP Logo">
+      <div>
+        <div class="party">भारतीय जन कल्याण पार्टी</div>
+        <div class="tagline">राष्ट्र प्रथम • जन सेवा सर्वोपरि</div>
+      </div>
+    </header>
+
+    <div class="title">सदस्यता प्रमाण-पत्र</div>
+    <div class="subtitle">CERTIFICATE OF MEMBERSHIP</div>
+
+    <p class="intro">यह प्रमाणित किया जाता है कि</p>
+    <h2 id="name"></h2>
+    <p class="body">
+      भारतीय जन कल्याण पार्टी का विधिवत अनुमोदित सदस्य है।
+      पार्टी के अभिलेख के अनुसार सदस्यता का विवरण निम्नलिखित है:
+    </p>
+
+    <div class="details">
+      <div><span>सदस्य ID</span><b id="mid"></b></div>
+      <div><span>जिला</span><b id="district"></b></div>
+      <div><span>भूमिका</span><b id="role"></b></div>
+      <div><span>जारी दिनांक</span><b id="date"></b></div>
+    </div>
+
+    <div class="status">✓ APPROVED MEMBER</div>
+
+    <div class="bottom">
+      <div>
+        <div class="sign-line"></div>
+        <b>अधिकृत हस्ताक्षर</b>
+        <small>भारतीय जन कल्याण पार्टी</small>
+      </div>
+      <div id="qr" class="qr"></div>
+    </div>
+
+    <div class="footer">भारतीय जन कल्याण पार्टी (BJKP)</div>
+  </div>
+
+  <button id="printBtn" class="print" hidden onclick="window.print()">🖨️ प्रमाण-पत्र Print / Save PDF</button>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+let sb=null;
+async function getSB(){
+  if(sb)return sb;
+  if(typeof supabase==="undefined" || typeof SUPABASE_URL==="undefined" || typeof SUPABASE_ANON_KEY==="undefined"){
+    throw new Error("Supabase config नहीं मिला।");
+  }
+  sb=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+  return sb;
+}
+function esc(v){
+  return String(v??"-").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
+}
+function formatDate(v){
+  if(!v)return "-";
+  try{return new Date(v).toLocaleDateString("hi-IN",{day:"2-digit",month:"long",year:"numeric"});}
+  catch{return "-";}
+}
+async function findCertificate(){
+  const input=document.getElementById("memberId");
+  const msg=document.getElementById("msg");
+  const cert=document.getElementById("certificate");
+  const print=document.getElementById("printBtn");
+  const id=input.value.trim().toUpperCase();
+  cert.hidden=true; print.hidden=true;
+  if(!id){msg.textContent="कृपया Member ID डालें।";return;}
+  msg.textContent="सत्यापन हो रहा है...";
+  try{
+    const c=await getSB();
+    const {data,error}=await c.from("members")
+      .select("member_id,name,district,role,status,approved_at")
+      .eq("member_id",id).maybeSingle();
+    if(error)throw new Error(error.message);
+    if(!data){msg.textContent="यह Member ID नहीं मिली।";return;}
+    if(data.status!=="approved"){
+      msg.textContent="यह सदस्यता अभी Approved नहीं है। प्रमाण-पत्र उपलब्ध नहीं है।";
+      return;
+    }
+    document.getElementById("name").textContent=data.name||"-";
+    document.getElementById("mid").textContent=data.member_id||"-";
+    document.getElementById("district").textContent=data.district||"-";
+    document.getElementById("role").textContent=data.role||"-";
+    document.getElementById("date").textContent=formatDate(data.approved_at);
+
+    const qr=document.getElementById("qr");
+    qr.innerHTML="";
+    if(typeof QRCode!=="undefined"){
+      const verifyUrl=location.origin+location.pathname.replace("certificate.html","")+"?verify="+encodeURIComponent(data.member_id);
+      new QRCode(qr,{text:verifyUrl,width:82,height:82});
+    }
+    msg.textContent="";
+    cert.hidden=false;
+    print.hidden=false;
+    cert.scrollIntoView({behavior:"smooth"});
+  }catch(e){
+    msg.textContent=e.message||"प्रमाण-पत्र नहीं बन सका।";
+  }
+}
+window.addEventListener("DOMContentLoaded",()=>{
+  const id=new URLSearchParams(location.search).get("id");
+  if(id){document.getElementById("memberId").value=id.toUpperCase();findCertificate();}
+});
+</script>
+</body>
+</html>
