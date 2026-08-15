@@ -1,48 +1,80 @@
-let newsClient=null;
+async function loadHomeNews(){
+  const grid = document.getElementById("newsGrid");
+  if(!grid) return;
 
-function getClient(){
-  if(newsClient) return newsClient;
-  if(typeof supabase==="undefined" || typeof SUPABASE_URL==="undefined" || typeof SUPABASE_ANON_KEY==="undefined"){
-    throw new Error("config.js में Supabase configuration नहीं मिली।");
-  }
-  newsClient=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
-  return newsClient;
-}
-
-function esc(v){
-  return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
-}
-
-function formatDate(v){
-  if(!v) return "";
-  return new Intl.DateTimeFormat("hi-IN",{day:"2-digit",month:"long",year:"numeric"}).format(new Date(v));
-}
-
-async function loadNews(){
-  const grid=document.getElementById("newsGrid");
-  const empty=document.getElementById("empty");
-  const error=document.getElementById("error");
   try{
-    const c=getClient();
-    const {data,error:err}=await c.from("news")
-      .select("id,title,excerpt,content,image_url,published_at,created_at,slug")
+    if(typeof supabase === "undefined" ||
+       typeof SUPABASE_URL === "undefined" ||
+       typeof SUPABASE_ANON_KEY === "undefined"){
+      grid.innerHTML = '<div class="news-empty">समाचार सेवा उपलब्ध नहीं है।</div>';
+      return;
+    }
+
+    const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const {data,error} = await client
+      .from("news")
+      .select("id,title,excerpt,content,image_url,published_at,created_at,status")
       .eq("status","published")
-      .order("published_at",{ascending:false});
-    if(err) throw err;
-    if(!data || !data.length){empty.classList.remove("hidden");return;}
-    grid.innerHTML=data.map(n=>`
-      <article class="news-card">
-        ${n.image_url?`<img class="news-image" src="${esc(n.image_url)}" alt="${esc(n.title)}" onerror="this.style.display='none'">`:""}
-        <div class="news-body">
-          <div class="news-date">${esc(formatDate(n.published_at||n.created_at))}</div>
-          <h3 class="news-title">${esc(n.title)}</h3>
-          <p class="news-excerpt">${esc(n.excerpt||"")}</p>
-          <a class="read-btn" href="news-detail.html?id=${encodeURIComponent(n.id)}">पूरी खबर पढ़ें</a>
-        </div>
-      </article>`).join("");
-  }catch(e){
-    error.textContent="News load नहीं हो सकी: "+e.message;
-    error.classList.remove("hidden");
+      .order("published_at",{ascending:false,nullsLast:true})
+      .order("created_at",{ascending:false})
+      .limit(6);
+
+    if(error) throw error;
+
+    if(!data || data.length === 0){
+      grid.innerHTML = '<div class="news-empty">अभी कोई प्रकाशित समाचार उपलब्ध नहीं है।</div>';
+      return;
+    }
+
+    grid.innerHTML = data.map(item=>{
+      const title = escapeNews(item.title || "समाचार");
+      const text = escapeNews(item.excerpt || item.content || "");
+      const date = formatNewsDate(item.published_at || item.created_at);
+      const image = item.image_url
+        ? `<img src="${escapeAttr(item.image_url)}" alt="${escapeAttr(item.title || "समाचार")}" onerror="this.style.display='none'">`
+        : "";
+
+      return `
+        <article class="news-card">
+          ${image}
+          <div class="news-card-body">
+            <div class="news-date">${date}</div>
+            <h3>${title}</h3>
+            <p>${text}</p>
+          </div>
+        </article>
+      `;
+    }).join("");
+
+  }catch(err){
+    console.error("News load error:",err);
+    grid.innerHTML = '<div class="news-empty">समाचार लोड नहीं हो सके। कृपया बाद में पुनः प्रयास करें।</div>';
   }
 }
-document.addEventListener("DOMContentLoaded",loadNews);
+
+function escapeNews(value){
+  return String(value ?? "").replace(/[&<>"]/g,m=>({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;"
+  }[m]));
+}
+
+function escapeAttr(value){
+  return escapeNews(value).replace(/'/g,"&#39;");
+}
+
+function formatNewsDate(value){
+  if(!value) return "";
+  const d = new Date(value);
+  if(Number.isNaN(d.getTime())) return "";
+  return d.toLocaleDateString("hi-IN",{
+    day:"2-digit",
+    month:"long",
+    year:"numeric"
+  });
+}
+
+document.addEventListener("DOMContentLoaded",loadHomeNews);
