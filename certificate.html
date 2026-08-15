@@ -3,131 +3,915 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+
 <title>BJKP | सदस्यता प्रमाण-पत्र</title>
-<link rel="stylesheet" href="certificate.css">
+
+<link rel="stylesheet" href="style.css">
+
+<style>
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  background:#f3f3f3;
+  font-family:Arial,"Noto Sans Devanagari",sans-serif;
+  color:#222;
+}
+
+.certificate-page{
+  min-height:100vh;
+  padding:30px 15px;
+}
+
+.search-box{
+  max-width:650px;
+  margin:0 auto 25px;
+  background:#fff;
+  padding:20px;
+  border-radius:12px;
+  box-shadow:0 5px 25px rgba(0,0,0,.12);
+  text-align:center;
+}
+
+.search-box h2{
+  margin:0 0 8px;
+  color:#8b0000;
+}
+
+.search-box p{
+  margin:5px 0 15px;
+  color:#666;
+}
+
+.search-form{
+  display:flex;
+  gap:10px;
+}
+
+.search-form input{
+  flex:1;
+  padding:13px;
+  border:1px solid #ccc;
+  border-radius:7px;
+  font-size:16px;
+}
+
+.search-form button{
+  border:0;
+  background:#8b0000;
+  color:#fff;
+  padding:13px 20px;
+  border-radius:7px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+#message{
+  margin-top:12px;
+  color:#8b0000;
+  font-weight:bold;
+}
+
+.certificate{
+  position:relative;
+  max-width:1100px;
+  min-height:760px;
+  margin:auto;
+  background:#fff;
+  overflow:hidden;
+  border:8px solid #b8860b;
+  box-shadow:0 8px 30px rgba(0,0,0,.2);
+  padding:35px 45px;
+}
+
+.certificate:before{
+  content:"";
+  position:absolute;
+  inset:12px;
+  border:2px solid #d4af37;
+  pointer-events:none;
+}
+
+.watermark{
+  position:absolute;
+  left:50%;
+  top:52%;
+  transform:translate(-50%,-50%);
+  width:400px;
+  opacity:.045;
+  pointer-events:none;
+}
+
+.watermark img{
+  width:100%;
+}
+
+.top{
+  position:relative;
+  z-index:2;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:20px;
+  padding-bottom:15px;
+  border-bottom:2px solid #d4af37;
+}
+
+.logo{
+  width:105px;
+  height:105px;
+  object-fit:contain;
+}
+
+.party-name{
+  text-align:center;
+}
+
+.party-name h1{
+  margin:0;
+  color:#8b0000;
+  font-size:32px;
+}
+
+.party-name h2{
+  margin:7px 0;
+  color:#b8860b;
+  font-size:20px;
+}
+
+.tagline{
+  color:#555;
+  font-weight:bold;
+}
+
+.title{
+  position:relative;
+  z-index:2;
+  text-align:center;
+  margin:30px 0 15px;
+}
+
+.title h2{
+  display:inline-block;
+  margin:0;
+  padding:8px 45px;
+  color:#fff;
+  background:linear-gradient(90deg,#700000,#a00000,#700000);
+  border-radius:5px;
+  font-size:32px;
+}
+
+.title p{
+  margin:10px 0;
+  font-size:18px;
+}
+
+.member-info{
+  position:relative;
+  z-index:2;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px 40px;
+  margin:25px 25px;
+}
+
+.info-row{
+  border-bottom:1px solid #ddd;
+  padding:8px 4px;
+  font-size:17px;
+}
+
+.info-row span{
+  display:inline-block;
+  width:125px;
+  font-weight:bold;
+  color:#700000;
+}
+
+.info-row strong{
+  color:#222;
+}
+
+.statement{
+  position:relative;
+  z-index:2;
+  margin:25px;
+  padding:18px;
+  border-left:5px solid #d4af37;
+  background:#fffaf0;
+  font-size:17px;
+  line-height:1.8;
+}
+
+.approved{
+  position:absolute;
+  right:75px;
+  top:370px;
+  width:160px;
+  height:160px;
+  border:5px solid #b8860b;
+  border-radius:50%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  color:#8b0000;
+  font-weight:bold;
+  transform:rotate(-10deg);
+  opacity:.9;
+}
+
+.approved .check{
+  font-size:45px;
+  color:#b8860b;
+}
+
+.bottom{
+  position:relative;
+  z-index:2;
+  display:flex;
+  justify-content:space-between;
+  align-items:end;
+  margin:35px 25px 0;
+}
+
+.qr-area{
+  text-align:center;
+}
+
+#qrcode{
+  background:#fff;
+  padding:8px;
+  display:inline-block;
+  border:1px solid #ddd;
+}
+
+.qr-area small{
+  display:block;
+  margin-top:6px;
+  color:#555;
+}
+
+.signature{
+  width:270px;
+  text-align:center;
+}
+
+.signature img{
+  width:220px;
+  height:80px;
+  object-fit:contain;
+  display:block;
+  margin:0 auto -5px;
+}
+
+.signature-line{
+  border-top:2px solid #333;
+}
+
+.signature b{
+  display:block;
+  color:#8b0000;
+  font-size:18px;
+  margin-top:6px;
+}
+
+.signature span{
+  display:block;
+  font-weight:bold;
+  margin-top:4px;
+}
+
+.footer{
+  position:relative;
+  z-index:2;
+  text-align:center;
+  margin-top:25px;
+  padding-top:10px;
+  border-top:1px solid #d4af37;
+  color:#666;
+  font-size:13px;
+}
+
+.actions{
+  text-align:center;
+  margin:25px 0;
+}
+
+.print-btn{
+  background:#8b0000;
+  color:#fff;
+  border:0;
+  padding:13px 25px;
+  border-radius:7px;
+  font-size:16px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.home-btn{
+  display:inline-block;
+  margin-left:8px;
+  padding:12px 22px;
+  background:#d4af37;
+  color:#222;
+  text-decoration:none;
+  border-radius:7px;
+  font-weight:bold;
+}
+
+.hidden{
+  display:none!important;
+}
+
+@media(max-width:700px){
+
+  .certificate{
+    padding:25px 18px;
+    min-height:auto;
+  }
+
+  .top{
+    flex-direction:column;
+    gap:8px;
+  }
+
+  .logo{
+    width:85px;
+    height:85px;
+  }
+
+  .party-name h1{
+    font-size:24px;
+  }
+
+  .party-name h2{
+    font-size:16px;
+  }
+
+  .title h2{
+    font-size:25px;
+    padding:7px 25px;
+  }
+
+  .member-info{
+    grid-template-columns:1fr;
+    margin:15px 5px;
+    gap:5px;
+  }
+
+  .statement{
+    margin:15px 5px;
+    font-size:15px;
+  }
+
+  .approved{
+    position:relative;
+    top:auto;
+    right:auto;
+    margin:20px auto;
+  }
+
+  .bottom{
+    flex-direction:column;
+    gap:30px;
+    align-items:center;
+    margin:25px 5px;
+  }
+
+  .search-form{
+    flex-direction:column;
+  }
+
+  .home-btn{
+    margin:10px 0 0;
+  }
+}
+
+@media print{
+
+  body{
+    background:#fff;
+  }
+
+  .search-box,
+  .actions{
+    display:none!important;
+  }
+
+  .certificate-page{
+    padding:0;
+  }
+
+  .certificate{
+    width:100%;
+    max-width:none;
+    min-height:100vh;
+    box-shadow:none;
+    border:6px solid #b8860b;
+  }
+
+  @page{
+    size:A4 landscape;
+    margin:5mm;
+  }
+}
+</style>
 </head>
+
 <body>
-<div class="page">
+
+<div class="certificate-page">
+
+  <!-- SEARCH -->
   <div class="search-box">
-    <img src="images/logo.png" class="logo" alt="BJKP Logo">
-    <h1>सदस्यता प्रमाण-पत्र</h1>
-    <p>अपनी Approved Member ID डालें</p>
-    <div class="search-row">
-      <input id="memberId" placeholder="BJKP-XXXXXX" autocomplete="off">
-      <button onclick="findCertificate()">प्रमाण-पत्र देखें</button>
+    <h2>सदस्यता प्रमाण-पत्र</h2>
+    <p>Approved Member ID डालकर अपना प्रमाण-पत्र देखें</p>
+
+    <div class="search-form">
+      <input
+        id="memberId"
+        type="text"
+        placeholder="उदाहरण: BJKP-ABC123"
+        autocomplete="off"
+      >
+
+      <button onclick="loadCertificate()">
+        प्रमाण-पत्र देखें
+      </button>
     </div>
-    <p id="msg"></p>
+
+    <div id="message"></div>
   </div>
 
-  <div id="certificate" class="certificate" hidden>
-    <div class="top-line"></div>
-    <header>
-      <img src="images/logo.png" class="cert-logo" alt="BJKP Logo">
-      <div>
-        <div class="party">भारतीय जन कल्याण पार्टी</div>
-        <div class="tagline">राष्ट्र प्रथम • जन सेवा सर्वोपरि</div>
-      </div>
-    </header>
 
-    <div class="title">सदस्यता प्रमाण-पत्र</div>
-    <div class="subtitle">CERTIFICATE OF MEMBERSHIP</div>
+  <!-- CERTIFICATE -->
+  <div id="certificate" class="certificate hidden">
 
-    <p class="intro">यह प्रमाणित किया जाता है कि</p>
-    <h2 id="name"></h2>
-    <p class="body">
-      भारतीय जन कल्याण पार्टी का विधिवत अनुमोदित सदस्य है।
-      पार्टी के अभिलेख के अनुसार सदस्यता का विवरण निम्नलिखित है:
-    </p>
-
-    <div class="details">
-      <div><span>सदस्य ID</span><b id="mid"></b></div>
-      <div><span>जिला</span><b id="district"></b></div>
-      <div><span>भूमिका</span><b id="role"></b></div>
-      <div><span>जारी दिनांक</span><b id="date"></b></div>
+    <div class="watermark">
+      <img src="images/logo.png" alt="">
     </div>
 
-    <div class="status">✓ APPROVED MEMBER</div>
+    <!-- HEADER -->
+    <div class="top">
 
+      <img
+        src="images/logo.png"
+        class="logo"
+        alt="BJKP Logo"
+      >
+
+      <div class="party-name">
+
+        <h1>भारतीय जन कल्याण पार्टी</h1>
+
+        <h2>BHARATIYA JAN KALYAN PARTY (BJKP)</h2>
+
+        <div class="tagline">
+          राष्ट्र प्रथम • जन सेवा सर्वोपरि
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- TITLE -->
+    <div class="title">
+
+      <h2>प्रमाण-पत्र</h2>
+
+      <p>यह प्रमाणित किया जाता है कि</p>
+
+    </div>
+
+
+    <!-- MEMBER INFORMATION -->
+    <div class="member-info">
+
+      <div class="info-row">
+        <span>सदस्य का नाम</span>
+        :
+        <strong id="memberName">—</strong>
+      </div>
+
+      <div class="info-row">
+        <span>सदस्य ID</span>
+        :
+        <strong id="memberIdShow">—</strong>
+      </div>
+
+      <div class="info-row">
+        <span>मोबाइल</span>
+        :
+        <strong id="memberMobile">—</strong>
+      </div>
+
+      <div class="info-row">
+        <span>जिला</span>
+        :
+        <strong id="memberDistrict">—</strong>
+      </div>
+
+      <div class="info-row">
+        <span>भूमिका</span>
+        :
+        <strong id="memberRole">—</strong>
+      </div>
+
+      <div class="info-row">
+        <span>स्थिति</span>
+        :
+        <strong style="color:green">
+          ✓ APPROVED
+        </strong>
+      </div>
+
+    </div>
+
+
+    <!-- STATEMENT -->
+    <div class="statement">
+
+      उपरोक्त सदस्य को <b>भारतीय जन कल्याण पार्टी (BJKP)</b>
+      का अनुमोदित सदस्य होने के नाते यह सदस्यता प्रमाण-पत्र
+      प्रदान किया जाता है।
+
+      <br>
+
+      पार्टी सदस्य राष्ट्र प्रथम, जन सेवा एवं जन कल्याण
+      के उद्देश्यों के प्रति अपना योगदान देने के लिए प्रतिबद्ध रहेगा।
+
+    </div>
+
+
+    <!-- APPROVED SEAL -->
+    <div class="approved">
+
+      <div class="check">✓</div>
+
+      <div>APPROVED</div>
+
+      <div>MEMBER</div>
+
+    </div>
+
+
+    <!-- BOTTOM -->
     <div class="bottom">
-      <div>
-        <div class="sign-line"></div>
-        <b>अधिकृत हस्ताक्षर</b>
-        <small>भारतीय जन कल्याण पार्टी</small>
+
+      <!-- QR -->
+      <div class="qr-area">
+
+        <div id="qrcode"></div>
+
+        <small>
+          सत्यापन के लिए QR स्कैन करें
+        </small>
+
       </div>
-      <div id="qr" class="qr"></div>
+
+
+      <!-- SIGNATURE -->
+      <div class="signature">
+
+        <img
+          src="images/ajit-signature.png"
+          alt="राष्ट्रीय अध्यक्ष का डिजिटल हस्ताक्षर"
+        >
+
+        <div class="signature-line"></div>
+
+        <b>अजीत कुमार</b>
+
+        <span>राष्ट्रीय अध्यक्ष</span>
+
+        <span>भारतीय जन कल्याण पार्टी (BJKP)</span>
+
+      </div>
+
     </div>
 
-    <div class="footer">भारतीय जन कल्याण पार्टी (BJKP)</div>
+
+    <div class="footer">
+
+      राष्ट्र प्रथम • जन सेवा सर्वोपरि
+
+      <br>
+
+      © 2026 भारतीय जन कल्याण पार्टी (BJKP)
+
+    </div>
+
   </div>
 
-  <button id="printBtn" class="print" hidden onclick="window.print()">🖨️ प्रमाण-पत्र Print / Save PDF</button>
+
+  <!-- BUTTONS -->
+  <div id="certificateActions" class="actions hidden">
+
+    <button class="print-btn" onclick="window.print()">
+      🖨️ प्रमाण-पत्र Print / PDF
+    </button>
+
+    <a href="index.html" class="home-btn">
+      वेबसाइट पर वापस जाएँ
+    </a>
+
+  </div>
+
 </div>
 
+
+<!-- SUPABASE -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script src="config.js"></script>
+
+<!-- QR CODE -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+
 <script>
-let sb=null;
-async function getSB(){
-  if(sb)return sb;
-  if(typeof supabase==="undefined" || typeof SUPABASE_URL==="undefined" || typeof SUPABASE_ANON_KEY==="undefined"){
-    throw new Error("Supabase config नहीं मिला।");
+
+let sb = null;
+
+
+/* SUPABASE CONNECTION */
+async function loadSB(){
+
+  if(sb) return sb;
+
+  if(typeof supabase === "undefined"){
+    return null;
   }
-  sb=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+
+  if(
+    typeof SUPABASE_URL === "undefined" ||
+    typeof SUPABASE_ANON_KEY === "undefined"
+  ){
+    return null;
+  }
+
+  sb = supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+  );
+
   return sb;
 }
-function esc(v){
-  return String(v??"-").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
+
+
+/* SAFE HTML */
+function safe(v){
+
+  return String(v ?? "-")
+    .replace(/[&<>"]/g, m => ({
+      "&":"&amp;",
+      "<":"&lt;",
+      ">":"&gt;",
+      '"':"&quot;"
+    }[m]));
+
 }
-function formatDate(v){
-  if(!v)return "-";
-  try{return new Date(v).toLocaleDateString("hi-IN",{day:"2-digit",month:"long",year:"numeric"});}
-  catch{return "-";}
-}
-async function findCertificate(){
-  const input=document.getElementById("memberId");
-  const msg=document.getElementById("msg");
-  const cert=document.getElementById("certificate");
-  const print=document.getElementById("printBtn");
-  const id=input.value.trim().toUpperCase();
-  cert.hidden=true; print.hidden=true;
-  if(!id){msg.textContent="कृपया Member ID डालें।";return;}
-  msg.textContent="सत्यापन हो रहा है...";
+
+
+/* LOAD CERTIFICATE */
+async function loadCertificate(){
+
+  const input =
+    document.getElementById("memberId");
+
+  const message =
+    document.getElementById("message");
+
+  const certificate =
+    document.getElementById("certificate");
+
+  const actions =
+    document.getElementById("certificateActions");
+
+
+  let id =
+    input.value.trim().toUpperCase();
+
+
+  if(!id){
+
+    message.textContent =
+      "कृपया Member ID डालें।";
+
+    certificate.classList.add("hidden");
+
+    actions.classList.add("hidden");
+
+    return;
+  }
+
+
+  const c = await loadSB();
+
+
+  if(!c){
+
+    message.textContent =
+      "Database connect नहीं है।";
+
+    return;
+  }
+
+
+  message.textContent =
+    "Certificate खोजा जा रहा है...";
+
+
   try{
-    const c=await getSB();
-    const {data,error}=await c.from("members")
-      .select("member_id,name,district,role,status,approved_at")
-      .eq("member_id",id).maybeSingle();
-    if(error)throw new Error(error.message);
-    if(!data){msg.textContent="यह Member ID नहीं मिली।";return;}
-    if(data.status!=="approved"){
-      msg.textContent="यह सदस्यता अभी Approved नहीं है। प्रमाण-पत्र उपलब्ध नहीं है।";
+
+    const {data,error} = await c
+      .from("members")
+      .select(
+        "member_id,name,mobile,email,district,role,status,approved_at"
+      )
+      .eq("member_id",id)
+      .maybeSingle();
+
+
+    if(error){
+
+      message.textContent =
+        error.message;
+
       return;
     }
-    document.getElementById("name").textContent=data.name||"-";
-    document.getElementById("mid").textContent=data.member_id||"-";
-    document.getElementById("district").textContent=data.district||"-";
-    document.getElementById("role").textContent=data.role||"-";
-    document.getElementById("date").textContent=formatDate(data.approved_at);
 
-    const qr=document.getElementById("qr");
-    qr.innerHTML="";
-    if(typeof QRCode!=="undefined"){
-      const verifyUrl=location.origin+location.pathname.replace("certificate.html","")+"?verify="+encodeURIComponent(data.member_id);
-      new QRCode(qr,{text:verifyUrl,width:82,height:82});
+
+    if(!data){
+
+      message.textContent =
+        "यह Member ID नहीं मिली।";
+
+      certificate.classList.add("hidden");
+
+      actions.classList.add("hidden");
+
+      return;
     }
-    msg.textContent="";
-    cert.hidden=false;
-    print.hidden=false;
-    cert.scrollIntoView({behavior:"smooth"});
-  }catch(e){
-    msg.textContent=e.message||"प्रमाण-पत्र नहीं बन सका।";
+
+
+    if(data.status !== "approved"){
+
+      message.textContent =
+        "यह सदस्य अभी Approved नहीं है। Certificate केवल Approved Members के लिए उपलब्ध है।";
+
+      certificate.classList.add("hidden");
+
+      actions.classList.add("hidden");
+
+      return;
+    }
+
+
+    /* MEMBER DATA */
+
+    document.getElementById(
+      "memberName"
+    ).textContent =
+      data.name || "—";
+
+
+    document.getElementById(
+      "memberIdShow"
+    ).textContent =
+      data.member_id || "—";
+
+
+    document.getElementById(
+      "memberMobile"
+    ).textContent =
+      data.mobile || "—";
+
+
+    document.getElementById(
+      "memberDistrict"
+    ).textContent =
+      data.district || "—";
+
+
+    document.getElementById(
+      "memberRole"
+    ).textContent =
+      data.role || "सामान्य सदस्य";
+
+
+    /* QR */
+
+    const qr =
+      document.getElementById("qrcode");
+
+    qr.innerHTML = "";
+
+
+    const verifyURL =
+      location.origin +
+      location.pathname.replace(
+        "certificate.html",
+        "index.html"
+      ) +
+      "?verify=" +
+      encodeURIComponent(data.member_id);
+
+
+    if(typeof QRCode !== "undefined"){
+
+      new QRCode(qr,{
+
+        text:verifyURL,
+
+        width:110,
+
+        height:110
+
+      });
+
+    }
+
+
+    /* SHOW */
+
+    certificate.classList.remove(
+      "hidden"
+    );
+
+    actions.classList.remove(
+      "hidden"
+    );
+
+    message.textContent =
+      "✓ Certificate तैयार है।";
+
+
+    certificate.scrollIntoView({
+      behavior:"smooth"
+    });
+
   }
+  catch(error){
+
+    message.textContent =
+      "Error: " + error.message;
+
+  }
+
 }
-window.addEventListener("DOMContentLoaded",()=>{
-  const id=new URLSearchParams(location.search).get("id");
-  if(id){document.getElementById("memberId").value=id.toUpperCase();findCertificate();}
-});
+
+
+/* ENTER KEY */
+document
+  .getElementById("memberId")
+  .addEventListener(
+    "keydown",
+    function(e){
+
+      if(e.key === "Enter"){
+
+        loadCertificate();
+
+      }
+
+    }
+  );
+
+
+/* AUTO LOAD FROM URL */
+document.addEventListener(
+  "DOMContentLoaded",
+  function(){
+
+    const params =
+      new URLSearchParams(
+        location.search
+      );
+
+    const id =
+      params.get("member_id") ||
+      params.get("id");
+
+
+    if(id){
+
+      document.getElementById(
+        "memberId"
+      ).value = id;
+
+      loadCertificate();
+
+    }
+
+  }
+);
+
 </script>
+
 </body>
 </html>
