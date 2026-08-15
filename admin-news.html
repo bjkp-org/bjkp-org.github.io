@@ -1,42 +1,336 @@
 <!doctype html>
 <html lang="hi">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>BJKP | News Admin Panel</title><link rel="stylesheet" href="admin-news.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BJKP News Admin Panel</title>
+<link rel="stylesheet" href="style.css">
+<style>
+.news-wrap{max-width:1100px;margin:25px auto;padding:0 15px}
+.news-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.news-card{background:#fff;border-radius:12px;padding:18px;box-shadow:0 3px 15px rgba(0,0,0,.08)}
+.news-card h2{margin-top:0}.news-card label{display:block;font-weight:700;margin:12px 0 6px}
+.news-card input,.news-card textarea,.news-card select{width:100%;box-sizing:border-box;padding:11px;border:1px solid #ddd;border-radius:8px;font:inherit}
+.news-card textarea{min-height:130px;resize:vertical}
+.news-card button{cursor:pointer}
+.news-preview{display:none;width:100%;max-height:260px;object-fit:cover;margin-top:10px;border-radius:10px;border:1px solid #ddd}
+.news-item{border:1px solid #eee;border-radius:10px;padding:12px;margin-bottom:12px}
+.news-item img{width:100%;max-height:180px;object-fit:cover;border-radius:8px;margin-top:8px}
+.msg{margin-top:12px;font-weight:700}.muted{color:#777;font-size:13px}
+@media(max-width:750px){.news-grid{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
-<div class="admin-wrap">
-<header><div><h1>📰 BJKP News Admin Panel</h1><p>समाचार जोड़ें, संपादित करें और प्रकाशित करें</p></div><a href="news.html">News देखें</a></header>
+<header>
+  <div class="brand">
+    <div class="logo">BJKP</div>
+    <div><b>BJKP News Admin Panel</b><small>समाचार जोड़ें, संपादित करें और प्रकाशित करें</small></div>
+  </div>
+  <a class="btn" href="index.html">News देखें</a>
+</header>
 
-<section id="loginBox" class="panel">
-<h2>Admin Login</h2><p>यह panel Supabase Authentication से सुरक्षित है।</p>
-<input id="email" type="email" placeholder="Admin Email">
-<input id="password" type="password" placeholder="Password">
-<button onclick="login()">Login</button><div id="loginMsg"></div>
-</section>
+<main class="news-wrap">
+  <div style="margin-bottom:15px">
+    <button class="btn" onclick="newNews()">+ नया समाचार</button>
+    <button class="btn" onclick="adminLogout()">Logout</button>
+  </div>
 
-<section id="dashboard" class="hidden">
-<div class="top-actions"><button onclick="newNews()">+ नया समाचार</button><button class="secondary" onclick="logout()">Logout</button></div>
+  <div id="pageMsg" class="msg"></div>
 
-<div class="layout">
-<div class="panel">
-<h2 id="formTitle">नया समाचार</h2>
-<input type="hidden" id="newsId">
-<label>शीर्षक</label><input id="title" placeholder="समाचार का शीर्षक">
-<label>छोटा विवरण</label><textarea id="excerpt" rows="3" placeholder="News card पर दिखने वाला विवरण"></textarea>
-<label>पूरी खबर</label><textarea id="content" rows="10" placeholder="पूरी खबर यहां लिखें"></textarea>
-<label>Image URL</label><input id="image_url" placeholder="https://...">
-<label>तारीख</label><input id="published_at" type="datetime-local">
-<label>स्थिति</label><select id="status"><option value="draft">Draft</option><option value="published">Published</option></select>
-<div class="form-actions"><button onclick="saveNews()">Save News</button><button class="secondary" onclick="newNews()">Clear</button></div>
-<div id="formMsg"></div>
-</div>
+  <div class="news-grid">
+    <section class="news-card">
+      <h2>नया समाचार</h2>
+      <form id="newsForm">
+        <input type="hidden" id="newsId">
 
-<div class="panel">
-<h2>समाचार सूची</h2><div id="newsList">लोड हो रहा है...</div>
-</div>
-</div>
-</section>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="config.js"></script><script src="admin-news.js"></script>
-</body></html>
+        <label>शीर्षक</label>
+        <input id="title" required placeholder="समाचार का शीर्षक">
+
+        <label>छोटा विवरण</label>
+        <textarea id="excerpt" placeholder="News card पर दिखने वाला विवरण"></textarea>
+
+        <label>पूरी खबर</label>
+        <textarea id="content" placeholder="पूरी खबर यहाँ लिखें"></textarea>
+
+        <label>समाचार की फोटो</label>
+        <input id="newsImage" type="file" accept="image/jpeg,image/png,image/webp">
+        <div class="muted">फोन में Camera/Gallery और कंप्यूटर में File चुनने का विकल्प मिलेगा। अधिकतम 5 MB।</div>
+        <img id="newsImagePreview" class="news-preview" alt="Photo Preview">
+
+        <label>तारीख</label>
+        <input id="publishedAt" type="datetime-local">
+
+        <label>स्थिति</label>
+        <select id="status">
+          <option value="draft">Draft</option>
+          <option value="published">Published</option>
+        </select>
+
+        <div style="margin-top:15px">
+          <button class="btn" type="submit">Save News</button>
+          <button class="btn" type="button" onclick="clearForm()">Clear</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="news-card">
+      <h2>समाचार सूची</h2>
+      <div id="newsList">लोड हो रहा है...</div>
+    </section>
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script>
+/*
+  यह फाइल आपके मौजूदा config.js में से SUPABASE_URL और SUPABASE_ANON_KEY
+  पढ़ती है। यदि आपके config.js में नाम अलग हैं, नीचे के दो नाम बदल दें।
+*/
+const SB_URL =
+  window.SUPABASE_URL ||
+  window.supabaseUrl ||
+  window.SUPABASE_CONFIG?.url;
+
+const SB_KEY =
+  window.SUPABASE_ANON_KEY ||
+  window.supabaseAnonKey ||
+  window.SUPABASE_CONFIG?.anonKey;
+
+if (!SB_URL || !SB_KEY) {
+  document.getElementById("pageMsg").textContent =
+    "config.js में Supabase URL और anon key नहीं मिली।";
+  throw new Error("Supabase config missing");
+}
+
+const supabaseClient = window.supabase.createClient(SB_URL, SB_KEY);
+
+function msg(text, error=false){
+  const el=document.getElementById("pageMsg");
+  el.textContent=text;
+  el.style.color=error ? "#b00020" : "#187a2f";
+}
+
+function newNews(){
+  clearForm();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function clearForm(){
+  document.getElementById("newsForm").reset();
+  document.getElementById("newsId").value="";
+  const p=document.getElementById("newsImagePreview");
+  p.src=""; p.style.display="none";
+  document.getElementById("status").value="draft";
+}
+
+document.getElementById("newsImage").addEventListener("change", function(){
+  const file=this.files[0];
+  const p=document.getElementById("newsImagePreview");
+
+  if(!file){
+    p.src=""; p.style.display="none";
+    return;
+  }
+
+  if(!file.type.startsWith("image/") || file.size > 5*1024*1024){
+    alert("केवल JPG, PNG या WebP फोटो और अधिकतम 5 MB चुनें।");
+    this.value="";
+    p.src=""; p.style.display="none";
+    return;
+  }
+
+  p.src=URL.createObjectURL(file);
+  p.style.display="block";
+});
+
+async function uploadNewsImage(file){
+  if(!file) return null;
+
+  const ext=(file.name.split(".").pop() || "jpg").toLowerCase();
+  const path=`news/news-${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+
+  const {error}=await supabaseClient.storage
+    .from("news-images")
+    .upload(path,file,{cacheControl:"3600",upsert:false});
+
+  if(error) throw error;
+
+  const {data}=supabaseClient.storage
+    .from("news-images")
+    .getPublicUrl(path);
+
+  return data.publicUrl;
+}
+
+async function getSession(){
+  const {data,error}=await supabaseClient.auth.getSession();
+  if(error) throw error;
+  if(!data.session){
+    location.href="admin.html";
+    return null;
+  }
+  return data.session;
+}
+
+async function isNewsAdmin(){
+  const session=await getSession();
+  if(!session) return false;
+
+  const {data,error}=await supabaseClient
+    .from("news_admins")
+    .select("user_id")
+    .eq("user_id",session.user.id)
+    .maybeSingle();
+
+  if(error) throw error;
+  if(!data){
+    msg("आपको News Admin की अनुमति नहीं है।",true);
+    return false;
+  }
+  return true;
+}
+
+document.getElementById("newsForm").addEventListener("submit", async function(e){
+  e.preventDefault();
+  msg("समाचार save हो रहा है...");
+
+  try{
+    if(!(await isNewsAdmin())) return;
+
+    const id=document.getElementById("newsId").value;
+    const oldImage=document.getElementById("newsForm").dataset.oldImage || null;
+    const file=document.getElementById("newsImage").files[0];
+
+    let imageUrl=oldImage;
+
+    if(file){
+      imageUrl=await uploadNewsImage(file);
+    }
+
+    const row={
+      title:document.getElementById("title").value.trim(),
+      excerpt:document.getElementById("excerpt").value.trim(),
+      content:document.getElementById("content").value.trim(),
+      image_url:imageUrl,
+      published_at:document.getElementById("publishedAt").value
+        ? new Date(document.getElementById("publishedAt").value).toISOString()
+        : new Date().toISOString(),
+      status:document.getElementById("status").value
+    };
+
+    let result;
+    if(id){
+      result=await supabaseClient.from("news").update(row).eq("id",id);
+    }else{
+      result=await supabaseClient.from("news").insert(row);
+    }
+
+    if(result.error) throw result.error;
+
+    msg("समाचार सफलतापूर्वक save हो गया।");
+    clearForm();
+    await loadNews();
+
+  }catch(err){
+    console.error(err);
+    msg("Save error: "+(err.message || err),true);
+  }
+});
+
+async function loadNews(){
+  const list=document.getElementById("newsList");
+  const {data,error}=await supabaseClient
+    .from("news")
+    .select("*")
+    .order("published_at",{ascending:false});
+
+  if(error){
+    list.textContent="समाचार लोड नहीं हो सका: "+error.message;
+    return;
+  }
+
+  if(!data?.length){
+    list.textContent="अभी कोई news नहीं है।";
+    return;
+  }
+
+  list.innerHTML=data.map(n=>`
+    <article class="news-item">
+      <b>${escapeHtml(n.title || "")}</b>
+      <div class="muted">${formatDate(n.published_at)} · ${escapeHtml(n.status || "")}</div>
+      ${n.image_url ? `<img src="${escapeAttr(n.image_url)}" alt="">` : ""}
+      <p>${escapeHtml(n.excerpt || "")}</p>
+      <button class="btn" onclick="editNews('${escapeAttr(n.id)}')">Edit</button>
+      <button class="btn" onclick="deleteNews('${escapeAttr(n.id)}')">Delete</button>
+    </article>
+  `).join("");
+}
+
+async function editNews(id){
+  const {data,error}=await supabaseClient.from("news").select("*").eq("id",id).single();
+  if(error){msg(error.message,true);return;}
+
+  document.getElementById("newsId").value=data.id;
+  document.getElementById("title").value=data.title || "";
+  document.getElementById("excerpt").value=data.excerpt || "";
+  document.getElementById("content").value=data.content || "";
+  document.getElementById("status").value=data.status || "draft";
+  document.getElementById("newsForm").dataset.oldImage=data.image_url || "";
+
+  if(data.published_at){
+    const d=new Date(data.published_at);
+    d.setMinutes(d.getMinutes()-d.getTimezoneOffset());
+    document.getElementById("publishedAt").value=d.toISOString().slice(0,16);
+  }
+
+  const p=document.getElementById("newsImagePreview");
+  if(data.image_url){
+    p.src=data.image_url;
+    p.style.display="block";
+  }else{
+    p.src="";p.style.display="none";
+  }
+
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+async function deleteNews(id){
+  if(!confirm("क्या यह समाचार delete करना है?")) return;
+
+  try{
+    if(!(await isNewsAdmin())) return;
+    const {error}=await supabaseClient.from("news").delete().eq("id",id);
+    if(error) throw error;
+    msg("समाचार delete हो गया।");
+    await loadNews();
+  }catch(err){
+    msg("Delete error: "+err.message,true);
+  }
+}
+
+async function adminLogout(){
+  await supabaseClient.auth.signOut();
+  location.href="admin.html";
+}
+
+function formatDate(v){
+  if(!v) return "";
+  return new Date(v).toLocaleString("hi-IN");
+}
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
+}
+function escapeAttr(s){return escapeHtml(s);}
+
+(async()=>{
+  try{
+    if(await isNewsAdmin()) await loadNews();
+  }catch(e){
+    console.error(e);
+    msg(e.message || "लोड error",true);
+  }
+})();
+</script>
+</body>
+</html>
