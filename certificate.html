@@ -15,31 +15,40 @@
 
 body{
   margin:0;
-  background:#f3f3f3;
-  font-family:Arial,"Noto Sans Devanagari",sans-serif;
+  background:#eee;
   color:#222;
+  font-family:Arial,"Noto Sans Devanagari",sans-serif;
 }
+
+/* =========================
+   PAGE
+========================= */
 
 .certificate-page{
   min-height:100vh;
-  padding:30px 15px;
+  padding:25px 10px 40px;
 }
 
-/* SEARCH BOX */
+
+/* =========================
+   SEARCH
+========================= */
 
 .search-box{
-  max-width:650px;
+  width:100%;
+  max-width:700px;
   margin:0 auto 25px;
   background:#fff;
   padding:20px;
   border-radius:12px;
-  box-shadow:0 5px 25px rgba(0,0,0,.12);
+  box-shadow:0 5px 25px rgba(0,0,0,.15);
   text-align:center;
 }
 
 .search-box h2{
   margin:0 0 8px;
   color:#8b0000;
+  font-size:25px;
 }
 
 .search-box p{
@@ -54,6 +63,7 @@ body{
 
 .search-form input{
   flex:1;
+  min-width:0;
   padding:13px;
   border:1px solid #ccc;
   border-radius:7px;
@@ -69,7 +79,7 @@ body{
   border:0;
   background:#8b0000;
   color:#fff;
-  padding:13px 20px;
+  padding:13px 22px;
   border-radius:7px;
   font-weight:bold;
   cursor:pointer;
@@ -81,52 +91,206 @@ body{
   font-weight:bold;
 }
 
-/* CERTIFICATE */
+
+/* =========================
+   CERTIFICATE
+========================= */
 
 .certificate{
   position:relative;
+  width:100%;
   max-width:1100px;
   min-height:760px;
   margin:auto;
-  background:#fff;
   overflow:hidden;
-  border:8px solid #b8860b;
-  box-shadow:0 8px 30px rgba(0,0,0,.2);
+
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(255,255,255,.98) 0%,
+      rgba(255,250,235,.98) 65%,
+      rgba(255,244,215,.98) 100%
+    );
+
+  border:8px solid #8b4a00;
+
+  box-shadow:
+    0 8px 35px rgba(0,0,0,.25);
+
   padding:35px 45px;
 }
+
+
+/* OUTER GOLD FRAME */
 
 .certificate:before{
   content:"";
   position:absolute;
-  inset:12px;
-  border:2px solid #d4af37;
+  inset:9px;
+
+  border:3px solid #d4af37;
+
   pointer-events:none;
 }
+
+
+/* INNER FRAME */
+
+.certificate:after{
+  content:"";
+  position:absolute;
+  inset:18px;
+
+  border:1px solid #b8860b;
+
+  pointer-events:none;
+}
+
+
+/* =========================
+   DECORATIVE CORNERS
+========================= */
+
+.corner{
+  position:absolute;
+  width:70px;
+  height:70px;
+  z-index:3;
+  pointer-events:none;
+}
+
+.corner:before,
+.corner:after{
+  content:"";
+  position:absolute;
+  border-color:#d4af37;
+}
+
+.corner:before{
+  width:45px;
+  height:45px;
+  border-style:solid;
+}
+
+.corner:after{
+  width:22px;
+  height:22px;
+  border-style:solid;
+}
+
+.corner.tl{
+  left:12px;
+  top:12px;
+}
+
+.corner.tl:before{
+  left:0;
+  top:0;
+  border-width:4px 0 0 4px;
+  border-radius:25px 0 0 0;
+}
+
+.corner.tl:after{
+  left:8px;
+  top:8px;
+  border-width:2px 0 0 2px;
+  border-radius:15px 0 0 0;
+}
+
+.corner.tr{
+  right:12px;
+  top:12px;
+}
+
+.corner.tr:before{
+  right:0;
+  top:0;
+  border-width:4px 4px 0 0;
+  border-radius:0 25px 0 0;
+}
+
+.corner.tr:after{
+  right:8px;
+  top:8px;
+  border-width:2px 2px 0 0;
+  border-radius:0 15px 0 0;
+}
+
+.corner.bl{
+  left:12px;
+  bottom:12px;
+}
+
+.corner.bl:before{
+  left:0;
+  bottom:0;
+  border-width:0 0 4px 4px;
+  border-radius:0 0 0 25px;
+}
+
+.corner.bl:after{
+  left:8px;
+  bottom:8px;
+  border-width:0 0 2px 2px;
+  border-radius:0 0 0 15px;
+}
+
+.corner.br{
+  right:12px;
+  bottom:12px;
+}
+
+.corner.br:before{
+  right:0;
+  bottom:0;
+  border-width:0 4px 4px 0;
+  border-radius:0 0 25px 0;
+}
+
+.corner.br:after{
+  right:8px;
+  bottom:8px;
+  border-width:0 2px 2px 0;
+  border-radius:0 0 15px 0;
+}
+
+
+/* =========================
+   WATERMARK
+========================= */
 
 .watermark{
   position:absolute;
   left:50%;
-  top:53%;
+  top:54%;
   transform:translate(-50%,-50%);
   width:430px;
   opacity:.045;
   pointer-events:none;
+  z-index:0;
 }
 
 .watermark img{
   width:100%;
 }
 
-/* HEADER */
+
+/* =========================
+   HEADER
+========================= */
 
 .top{
   position:relative;
-  z-index:2;
+  z-index:5;
+
   display:flex;
   align-items:center;
   justify-content:center;
-  gap:20px;
-  padding-bottom:15px;
+
+  gap:22px;
+
+  padding:5px 40px 15px;
+
   border-bottom:2px solid #d4af37;
 }
 
@@ -142,61 +306,132 @@ body{
 
 .party-name h1{
   margin:0;
+
   color:#8b0000;
-  font-size:32px;
+
+  font-size:31px;
+  font-weight:800;
 }
 
 .party-name h2{
   margin:7px 0;
+
   color:#b8860b;
-  font-size:20px;
+
+  font-size:19px;
+  font-weight:bold;
 }
 
 .tagline{
   color:#555;
   font-weight:bold;
+  font-size:14px;
 }
 
-/* TITLE */
+
+/* =========================
+   TITLE
+========================= */
 
 .title{
   position:relative;
-  z-index:2;
+  z-index:5;
+
   text-align:center;
-  margin:30px 0 15px;
+
+  margin:28px 0 15px;
 }
 
 .title h2{
   display:inline-block;
+
   margin:0;
-  padding:8px 45px;
+
+  padding:10px 55px;
+
   color:#fff;
-  background:linear-gradient(
-    90deg,
-    #700000,
-    #a00000,
-    #700000
-  );
-  border-radius:5px;
-  font-size:32px;
+
+  background:
+    linear-gradient(
+      90deg,
+      #5e0000,
+      #a00000,
+      #5e0000
+    );
+
+  border-radius:4px;
+
+  font-size:31px;
+
+  box-shadow:
+    0 3px 8px rgba(0,0,0,.2);
 }
 
 .title p{
-  margin:10px 0;
+  margin:12px 0 0;
+
   font-size:18px;
+
+  font-weight:bold;
 }
 
-/* MEMBER AREA */
+
+/* =========================
+   DECORATIVE LINE
+========================= */
+
+.gold-line{
+  width:280px;
+  height:2px;
+
+  margin:8px auto 20px;
+
+  background:#b8860b;
+
+  position:relative;
+}
+
+.gold-line:after{
+  content:"◆";
+
+  position:absolute;
+
+  left:50%;
+  top:-12px;
+
+  transform:translateX(-50%);
+
+  color:#b8860b;
+
+  background:#fffaf0;
+
+  padding:0 8px;
+
+  font-size:16px;
+}
+
+
+/* =========================
+   MEMBER SECTION
+========================= */
 
 .member-section{
   position:relative;
-  z-index:2;
+  z-index:5;
+
   display:grid;
+
   grid-template-columns:150px 1fr;
+
   gap:25px;
+
   align-items:start;
-  margin:25px;
+
+  margin:20px 25px;
 }
+
+
+/* MEMBER PHOTO */
 
 .member-photo-box{
   text-align:center;
@@ -205,39 +440,61 @@ body{
 .member-photo{
   width:135px;
   height:165px;
+
   object-fit:cover;
+
   border:4px solid #b8860b;
+
   padding:4px;
+
   background:#fff;
-  border-radius:5px;
+
+  border-radius:4px;
+
+  box-shadow:
+    0 2px 7px rgba(0,0,0,.15);
 }
 
 .member-photo-label{
   display:block;
+
   margin-top:6px;
+
   color:#700000;
+
   font-size:13px;
+
   font-weight:bold;
 }
 
-/* INFORMATION */
+
+/* =========================
+   INFORMATION
+========================= */
 
 .member-info{
   display:grid;
+
   grid-template-columns:1fr 1fr;
-  gap:12px 30px;
+
+  gap:10px 25px;
 }
 
 .info-row{
   border-bottom:1px solid #ddd;
+
   padding:8px 4px;
-  font-size:17px;
+
+  font-size:16px;
 }
 
 .info-row span{
   display:inline-block;
-  width:115px;
+
+  width:110px;
+
   font-weight:bold;
+
   color:#700000;
 }
 
@@ -245,59 +502,54 @@ body{
   color:#222;
 }
 
-/* STATEMENT */
+
+/* =========================
+   STATEMENT
+========================= */
 
 .statement{
   position:relative;
-  z-index:2;
-  margin:25px;
-  padding:18px;
+  z-index:5;
+
+  margin:20px 25px;
+
+  padding:17px 20px;
+
   border-left:5px solid #d4af37;
-  background:#fffaf0;
-  font-size:17px;
+
+  background:
+    rgba(255,250,235,.95);
+
+  font-size:16px;
+
   line-height:1.8;
+
+  box-shadow:
+    0 1px 5px rgba(0,0,0,.05);
 }
 
-/* APPROVED */
 
-.approved{
-  position:absolute;
-  right:75px;
-  top:370px;
-  width:160px;
-  height:160px;
-  border:5px solid #b8860b;
-  border-radius:50%;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  color:#8b0000;
-  font-weight:bold;
-  transform:rotate(-10deg);
-  opacity:.9;
-  z-index:3;
-  background:rgba(255,255,255,.12);
-}
-
-.approved .check{
-  font-size:45px;
-  color:#b8860b;
-  line-height:1;
-}
-
-/* BOTTOM */
+/* =========================
+   BOTTOM
+========================= */
 
 .bottom{
   position:relative;
-  z-index:2;
+  z-index:5;
+
   display:flex;
+
   justify-content:space-between;
+
   align-items:end;
-  margin:35px 25px 0;
+
+  margin:30px 25px 0;
 }
 
-/* QR */
+
+/* =========================
+   QR
+========================= */
 
 .qr-area{
   text-align:center;
@@ -305,29 +557,43 @@ body{
 
 #qrcode{
   background:#fff;
+
   padding:8px;
+
   display:inline-block;
+
   border:1px solid #ddd;
 }
 
 .qr-area small{
   display:block;
+
   margin-top:6px;
+
   color:#555;
+
+  font-size:12px;
 }
 
-/* SIGNATURE */
+
+/* =========================
+   SIGNATURE
+========================= */
 
 .signature{
-  width:270px;
+  width:280px;
+
   text-align:center;
 }
 
 .signature img{
   width:220px;
   height:80px;
+
   object-fit:contain;
+
   display:block;
+
   margin:0 auto -5px;
 }
 
@@ -337,56 +603,90 @@ body{
 
 .signature b{
   display:block;
+
   color:#8b0000;
+
   font-size:18px;
+
   margin-top:6px;
 }
 
 .signature span{
   display:block;
+
   font-weight:bold;
+
   margin-top:4px;
+
+  font-size:14px;
 }
 
-/* FOOTER */
+
+/* =========================
+   FOOTER
+========================= */
 
 .footer{
   position:relative;
-  z-index:2;
+  z-index:5;
+
   text-align:center;
-  margin-top:25px;
+
+  margin-top:22px;
+
   padding-top:10px;
+
   border-top:1px solid #d4af37;
+
   color:#666;
-  font-size:13px;
+
+  font-size:12px;
 }
 
-/* BUTTONS */
+
+/* =========================
+   ACTIONS
+========================= */
 
 .actions{
   text-align:center;
+
   margin:25px 0;
 }
 
 .print-btn{
   background:#8b0000;
+
   color:#fff;
+
   border:0;
+
   padding:13px 25px;
+
   border-radius:7px;
+
   font-size:16px;
+
   font-weight:bold;
+
   cursor:pointer;
 }
 
 .home-btn{
   display:inline-block;
+
   margin-left:8px;
+
   padding:12px 22px;
+
   background:#d4af37;
+
   color:#222;
+
   text-decoration:none;
+
   border-radius:7px;
+
   font-weight:bold;
 }
 
@@ -394,76 +694,108 @@ body{
   display:none!important;
 }
 
-/* MOBILE */
+
+/* =========================
+   MOBILE
+========================= */
 
 @media(max-width:700px){
 
   .certificate-page{
-    padding:15px 8px;
+    padding:12px 5px 30px;
   }
 
   .certificate{
-    padding:25px 15px;
+    padding:25px 14px;
+
     min-height:auto;
+
     border-width:5px;
   }
 
   .top{
     flex-direction:column;
-    gap:8px;
+
+    gap:6px;
+
+    padding-left:10px;
+    padding-right:10px;
   }
 
   .logo{
-    width:85px;
-    height:85px;
+    width:82px;
+    height:82px;
   }
 
   .party-name h1{
-    font-size:24px;
+    font-size:23px;
   }
 
   .party-name h2{
-    font-size:16px;
+    font-size:15px;
+  }
+
+  .tagline{
+    font-size:12px;
+  }
+
+  .title{
+    margin-top:22px;
   }
 
   .title h2{
     font-size:25px;
-    padding:7px 25px;
+
+    padding:8px 30px;
+  }
+
+  .title p{
+    font-size:16px;
+  }
+
+  .gold-line{
+    width:190px;
   }
 
   .member-section{
     grid-template-columns:1fr;
+
     justify-items:center;
+
     margin:15px 5px;
   }
 
   .member-info{
     width:100%;
+
     grid-template-columns:1fr;
-    margin:0;
+
     gap:5px;
   }
 
   .info-row{
-    font-size:15px;
+    font-size:14px;
+  }
+
+  .info-row span{
+    width:105px;
   }
 
   .statement{
     margin:15px 5px;
-    font-size:15px;
-  }
 
-  .approved{
-    position:relative;
-    top:auto;
-    right:auto;
-    margin:20px auto;
+    font-size:14px;
+
+    line-height:1.7;
   }
 
   .bottom{
     flex-direction:column;
-    gap:30px;
+
+    gap:25px;
+
     align-items:center;
+
     margin:25px 5px;
   }
 
@@ -474,9 +806,16 @@ body{
   .home-btn{
     margin:10px 0 0;
   }
+
+  .corner{
+    transform:scale(.75);
+  }
 }
 
-/* PRINT */
+
+/* =========================
+   PRINT
+========================= */
 
 @media print{
 
@@ -495,23 +834,31 @@ body{
 
   .certificate{
     width:100%;
+
     max-width:none;
+
     min-height:100vh;
+
     box-shadow:none;
-    border:6px solid #b8860b;
+
+    border:6px solid #8b4a00;
   }
 
   @page{
     size:A4 landscape;
+
     margin:5mm;
   }
 }
+
 </style>
 </head>
+
 
 <body>
 
 <div class="certificate-page">
+
 
   <!-- SEARCH -->
 
@@ -543,9 +890,19 @@ body{
   </div>
 
 
+
   <!-- CERTIFICATE -->
 
   <div id="certificate" class="certificate hidden">
+
+
+    <!-- DECORATIVE CORNERS -->
+
+    <div class="corner tl"></div>
+    <div class="corner tr"></div>
+    <div class="corner bl"></div>
+    <div class="corner br"></div>
+
 
     <!-- WATERMARK -->
 
@@ -559,6 +916,7 @@ body{
     </div>
 
 
+
     <!-- HEADER -->
 
     <div class="top">
@@ -568,6 +926,7 @@ body{
         class="logo"
         alt="BJKP Logo"
       >
+
 
       <div class="party-name">
 
@@ -588,6 +947,7 @@ body{
     </div>
 
 
+
     <!-- TITLE -->
 
     <div class="title">
@@ -596,25 +956,29 @@ body{
         प्रमाण-पत्र
       </h2>
 
+      <div class="gold-line"></div>
+
       <p>
-        यह प्रमाणित किया जाता है कि
+        प्रमाणित किया जाता है कि
       </p>
 
     </div>
 
 
-    <!-- MEMBER SECTION -->
+
+    <!-- MEMBER -->
 
     <div class="member-section">
 
-      <!-- MEMBER PHOTO -->
+
+      <!-- PHOTO -->
 
       <div class="member-photo-box">
 
         <img
           id="memberPhoto"
           class="member-photo"
-          src=""
+          src="images/logo.png"
           alt="सदस्य की फोटो"
         >
 
@@ -625,43 +989,93 @@ body{
       </div>
 
 
-      <!-- MEMBER INFORMATION -->
+
+      <!-- INFORMATION -->
 
       <div class="member-info">
 
+
         <div class="info-row">
-          <span>सदस्य का नाम</span>
+
+          <span>
+            सदस्य का नाम
+          </span>
+
           :
-          <strong id="memberName">—</strong>
+
+          <strong id="memberName">
+            —
+          </strong>
+
         </div>
 
+
         <div class="info-row">
-          <span>सदस्य ID</span>
+
+          <span>
+            सदस्य ID
+          </span>
+
           :
-          <strong id="memberIdShow">—</strong>
+
+          <strong id="memberIdShow">
+            —
+          </strong>
+
         </div>
 
+
         <div class="info-row">
-          <span>मोबाइल</span>
+
+          <span>
+            मोबाइल
+          </span>
+
           :
-          <strong id="memberMobile">—</strong>
+
+          <strong id="memberMobile">
+            —
+          </strong>
+
         </div>
 
+
         <div class="info-row">
-          <span>जिला</span>
+
+          <span>
+            जिला
+          </span>
+
           :
-          <strong id="memberDistrict">—</strong>
+
+          <strong id="memberDistrict">
+            —
+          </strong>
+
         </div>
 
+
         <div class="info-row">
-          <span>भूमिका</span>
+
+          <span>
+            भूमिका
+          </span>
+
           :
-          <strong id="memberRole">—</strong>
+
+          <strong id="memberRole">
+            —
+          </strong>
+
         </div>
 
+
         <div class="info-row">
 
-          <span>स्थिति</span>
+          <span>
+            स्थिति
+          </span>
+
           :
 
           <strong style="color:green">
@@ -670,9 +1084,11 @@ body{
 
         </div>
 
+
       </div>
 
     </div>
+
 
 
     <!-- STATEMENT -->
@@ -693,28 +1109,11 @@ body{
     </div>
 
 
-    <!-- APPROVED SEAL -->
-
-    <div class="approved">
-
-      <div class="check">
-        ✓
-      </div>
-
-      <div>
-        APPROVED
-      </div>
-
-      <div>
-        MEMBER
-      </div>
-
-    </div>
-
 
     <!-- BOTTOM -->
 
     <div class="bottom">
+
 
       <!-- QR -->
 
@@ -727,6 +1126,7 @@ body{
         </small>
 
       </div>
+
 
 
       <!-- PRESIDENT SIGNATURE -->
@@ -754,7 +1154,9 @@ body{
 
       </div>
 
+
     </div>
+
 
 
     <!-- FOOTER -->
@@ -769,7 +1171,9 @@ body{
 
     </div>
 
+
   </div>
+
 
 
   <!-- ACTION BUTTONS -->
@@ -786,6 +1190,7 @@ body{
       🖨️ प्रमाण-पत्र Print / PDF
     </button>
 
+
     <a
       href="index.html"
       class="home-btn"
@@ -795,7 +1200,9 @@ body{
 
   </div>
 
+
 </div>
+
 
 
 <!-- SUPABASE -->
@@ -810,12 +1217,15 @@ body{
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
 
+
 <script>
 
 let sb = null;
 
 
-/* SUPABASE CONNECTION */
+/* =========================
+   SUPABASE CONNECTION
+========================= */
 
 async function loadSB(){
 
@@ -843,7 +1253,10 @@ async function loadSB(){
 }
 
 
-/* LOAD CERTIFICATE */
+
+/* =========================
+   LOAD CERTIFICATE
+========================= */
 
 async function loadCertificate(){
 
@@ -859,11 +1272,12 @@ async function loadCertificate(){
   const actions =
     document.getElementById("certificateActions");
 
+
   let id =
     input.value.trim().toUpperCase();
 
 
-  /* EMPTY ID */
+  /* EMPTY */
 
   if(!id){
 
@@ -880,7 +1294,9 @@ async function loadCertificate(){
 
   /* DATABASE */
 
-  const c = await loadSB();
+  const c =
+    await loadSB();
+
 
   if(!c){
 
@@ -901,18 +1317,24 @@ async function loadCertificate(){
 
   try{
 
-    /*
-      IMPORTANT:
-      photo_url भी database से लिया जा रहा है।
-    */
+
+    /* DATABASE QUERY */
 
     const {data,error} = await c
+
       .from("members")
+
       .select(
         "member_id,name,mobile,email,district,role,status,approved_at,photo_url"
       )
-      .eq("member_id",id)
+
+      .eq(
+        "member_id",
+        id
+      )
+
       .maybeSingle();
+
 
 
     /* ERROR */
@@ -930,7 +1352,8 @@ async function loadCertificate(){
     }
 
 
-    /* MEMBER NOT FOUND */
+
+    /* NOT FOUND */
 
     if(!data){
 
@@ -945,9 +1368,14 @@ async function loadCertificate(){
     }
 
 
-    /* ONLY APPROVED */
 
-    if(data.status !== "approved"){
+    /* APPROVED ONLY */
+
+    if(
+      String(data.status).toLowerCase()
+      !==
+      "approved"
+    ){
 
       message.textContent =
         "यह सदस्य अभी Approved नहीं है। Certificate केवल Approved Members के लिए उपलब्ध है।";
@@ -960,12 +1388,16 @@ async function loadCertificate(){
     }
 
 
-    /* MEMBER NAME */
+
+    /* =====================
+       MEMBER NAME
+    ===================== */
 
     document.getElementById(
       "memberName"
     ).textContent =
       data.name || "—";
+
 
 
     /* MEMBER ID */
@@ -976,12 +1408,14 @@ async function loadCertificate(){
       data.member_id || "—";
 
 
+
     /* MOBILE */
 
     document.getElementById(
       "memberMobile"
     ).textContent =
       data.mobile || "—";
+
 
 
     /* DISTRICT */
@@ -992,6 +1426,7 @@ async function loadCertificate(){
       data.district || "—";
 
 
+
     /* ROLE */
 
     document.getElementById(
@@ -1000,19 +1435,24 @@ async function loadCertificate(){
       data.role || "सामान्य सदस्य";
 
 
-    /* MEMBER PHOTO */
+
+    /* =====================
+       MEMBER PHOTO
+    ===================== */
 
     const memberPhoto =
-      document.getElementById("memberPhoto");
+      document.getElementById(
+        "memberPhoto"
+      );
 
 
-    if(data.photo_url){
+    if(
+      data.photo_url &&
+      String(data.photo_url).trim() !== ""
+    ){
 
       memberPhoto.src =
         data.photo_url;
-
-      memberPhoto.style.display =
-        "block";
 
     }
     else{
@@ -1020,24 +1460,22 @@ async function loadCertificate(){
       memberPhoto.src =
         "images/logo.png";
 
-      memberPhoto.style.display =
-        "block";
-
     }
 
 
-    /* QR CODE */
+
+    /* =====================
+       QR CODE
+    ===================== */
 
     const qr =
-      document.getElementById("qrcode");
+      document.getElementById(
+        "qrcode"
+      );
+
 
     qr.innerHTML = "";
 
-
-    /*
-      QR scan करने पर मुख्य website के
-      verification section पर जाएगा।
-    */
 
     const verifyURL =
       location.origin +
@@ -1051,14 +1489,19 @@ async function loadCertificate(){
       );
 
 
-    if(typeof QRCode !== "undefined"){
+    if(
+      typeof QRCode !== "undefined"
+    ){
 
       new QRCode(
         qr,
         {
           text:verifyURL,
+
           width:110,
+
           height:110,
+
           correctLevel:
             QRCode.CorrectLevel.M
         }
@@ -1067,7 +1510,10 @@ async function loadCertificate(){
     }
 
 
-    /* SHOW CERTIFICATE */
+
+    /* =====================
+       SHOW
+    ===================== */
 
     certificate.classList.remove(
       "hidden"
@@ -1082,16 +1528,20 @@ async function loadCertificate(){
       "✓ Certificate तैयार है।";
 
 
+
     /* SCROLL */
 
-    setTimeout(function(){
+    setTimeout(
+      function(){
 
-      certificate.scrollIntoView({
-        behavior:"smooth",
-        block:"start"
-      });
+        certificate.scrollIntoView({
+          behavior:"smooth",
+          block:"start"
+        });
 
-    },200);
+      },
+      200
+    );
 
   }
   catch(error){
@@ -1101,16 +1551,23 @@ async function loadCertificate(){
     message.textContent =
       "Error: " + error.message;
 
-    certificate.classList.add("hidden");
+    certificate.classList.add(
+      "hidden"
+    );
 
-    actions.classList.add("hidden");
+    actions.classList.add(
+      "hidden"
+    );
 
   }
 
 }
 
 
-/* ENTER KEY */
+
+/* =========================
+   ENTER KEY
+========================= */
 
 document
   .getElementById("memberId")
@@ -1118,7 +1575,9 @@ document
     "keydown",
     function(e){
 
-      if(e.key === "Enter"){
+      if(
+        e.key === "Enter"
+      ){
 
         loadCertificate();
 
@@ -1128,7 +1587,10 @@ document
   );
 
 
-/* AUTO LOAD FROM URL */
+
+/* =========================
+   AUTO LOAD
+========================= */
 
 document.addEventListener(
   "DOMContentLoaded",
@@ -1139,12 +1601,6 @@ document.addEventListener(
         location.search
       );
 
-
-    /*
-      इन दोनों तरीके से ID स्वीकार होगी:
-      certificate.html?id=BJKP-XXXXXX
-      certificate.html?member_id=BJKP-XXXXXX
-    */
 
     const id =
       params.get("member_id") ||
