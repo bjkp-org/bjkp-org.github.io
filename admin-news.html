@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BJKP | News Admin Panel</title><link rel="stylesheet" href="admin-news.css">
+</head>
+<body>
+<div class="admin-wrap">
+<header><div><h1>📰 BJKP News Admin Panel</h1><p>समाचार जोड़ें, संपादित करें और प्रकाशित करें</p></div><a href="news.html">News देखें</a></header>
+
+<section id="loginBox" class="panel">
+<h2>Admin Login</h2><p>यह panel Supabase Authentication से सुरक्षित है।</p>
+<input id="email" type="email" placeholder="Admin Email">
+<input id="password" type="password" placeholder="Password">
+<button onclick="login()">Login</button><div id="loginMsg"></div>
+</section>
+
+<section id="dashboard" class="hidden">
+<div class="top-actions"><button onclick="newNews()">+ नया समाचार</button><button class="secondary" onclick="logout()">Logout</button></div>
+
+<div class="layout">
+<div class="panel">
+<h2 id="formTitle">नया समाचार</h2>
+<input type="hidden" id="newsId">
+<label>शीर्षक</label><input id="title" placeholder="समाचार का शीर्षक">
+<label>छोटा विवरण</label><textarea id="excerpt" rows="3" placeholder="News card पर दिखने वाला विवरण"></textarea>
+<label>पूरी खबर</label><textarea id="content" rows="10" placeholder="पूरी खबर यहां लिखें"></textarea>
+<label>Image URL</label><input id="image_url" placeholder="https://...">
+<label>तारीख</label><input id="published_at" type="datetime-local">
+<label>स्थिति</label><select id="status"><option value="draft">Draft</option><option value="published">Published</option></select>
+<div class="form-actions"><button onclick="saveNews()">Save News</button><button class="secondary" onclick="newNews()">Clear</button></div>
+<div id="formMsg"></div>
+</div>
+
+<div class="panel">
+<h2>समाचार सूची</h2><div id="newsList">लोड हो रहा है...</div>
+</div>
+</div>
+</section>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="config.js"></script><script src="admin-news.js"></script>
+</body></html>

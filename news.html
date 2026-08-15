@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BJKP | समाचार</title>
+<link rel="stylesheet" href="news.css">
+</head>
+<body>
+<header class="news-header">
+  <div class="brand">
+    <img src="images/logo.png" alt="BJKP Logo" onerror="this.style.display='none'">
+    <div>
+      <h1>भारतीय जन कल्याण पार्टी</h1>
+      <p>राष्ट्र प्रथम • जन सेवा सर्वोपरि</p>
+    </div>
+  </div>
+  <a class="home-btn" href="index.html">मुख्य वेबसाइट</a>
+</header>
+
+<main class="container">
+  <section class="hero">
+    <span class="eyebrow">BJKP NEWS</span>
+    <h2>नवीनतम समाचार</h2>
+    <p>भारतीय जन कल्याण पार्टी की गतिविधियों, कार्यक्रमों और महत्वपूर्ण घोषणाओं की जानकारी।</p>
+  </section>
+
+  <div id="newsGrid" class="news-grid"></div>
+  <div id="empty" class="empty hidden">अभी कोई समाचार प्रकाशित नहीं है।</div>
+  <div id="error" class="error hidden"></div>
+</main>
+
+<footer>© 2026 भारतीय जन कल्याण पार्टी (BJKP)</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="news.js"></script>
+</body>
+</html>

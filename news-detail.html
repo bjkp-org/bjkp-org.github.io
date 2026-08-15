@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BJKP | समाचार</title><link rel="stylesheet" href="news.css">
+<style>
+.article{max-width:900px;margin:30px auto;background:#fff;padding:28px;border-radius:12px;border:1px solid #ead9aa;box-shadow:0 6px 22px rgba(0,0,0,.08)}
+.article img{width:100%;max-height:500px;object-fit:cover;border-radius:8px}.article h2{color:#750000;font-size:34px;line-height:1.35}.date{color:#9b7200;font-weight:bold}.content{white-space:pre-wrap;font-size:18px;line-height:2;color:#333}
+</style></head>
+<body>
+<header class="news-header"><div class="brand"><img src="images/logo.png" alt=""><div><h1>भारतीय जन कल्याण पार्टी</h1><p>राष्ट्र प्रथम • जन सेवा सर्वोपरि</p></div></div><a class="home-btn" href="news.html">सभी समाचार</a></header>
+<main class="container"><article id="article" class="article">समाचार लोड हो रहा है...</article></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="config.js"></script>
+<script>
+function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));}
+function fmt(v){return v?new Intl.DateTimeFormat("hi-IN",{day:"2-digit",month:"long",year:"numeric"}).format(new Date(v)):"";}
+async function run(){
+ const box=document.getElementById("article"), id=new URLSearchParams(location.search).get("id");
+ if(!id){box.textContent="समाचार ID नहीं मिली।";return}
+ try{
+  const c=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+  const {data,error}=await c.from("news").select("title,excerpt,content,image_url,published_at,status").eq("id",id).eq("status","published").maybeSingle();
+  if(error) throw error;if(!data){box.textContent="समाचार नहीं मिली।";return}
+  box.innerHTML=`${data.image_url?`<img src="${esc(data.image_url)}" alt="${esc(data.title)}">`:""}<div class="date">${esc(fmt(data.published_at))}</div><h2>${esc(data.title)}</h2><p>${esc(data.excerpt||"")}</p><div class="content">${esc(data.content||"")}</div>`;
+ }catch(e){box.textContent="Error: "+e.message}
+}
+run();
+</script></body></html>
