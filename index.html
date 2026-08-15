@@ -18,6 +18,35 @@
 @media(max-width:800px){.news-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:550px){.news-grid{grid-template-columns:1fr}.news-card img{height:200px}}
 </style>
+
+<style>
+.news-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;margin-top:30px;align-items:stretch}
+.news-card{background:#fff;border:1px solid rgba(139,0,0,.12);border-radius:16px;overflow:hidden;box-shadow:0 8px 24px rgba(70,0,0,.10);display:flex;flex-direction:column;transition:transform .2s ease,box-shadow .2s ease}
+.news-card:hover{transform:translateY(-4px);box-shadow:0 14px 30px rgba(70,0,0,.15)}
+.news-media{height:190px;background:linear-gradient(135deg,#8b0000,#b8860b);position:relative;overflow:hidden}
+.news-media img{width:100%;height:100%;object-fit:cover;display:block}
+.news-placeholder{height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;color:#fff;text-align:center;font-weight:700;letter-spacing:.5px}
+.news-placeholder img{width:74px;height:74px;object-fit:contain;margin-bottom:8px}
+.news-badge{position:absolute;top:12px;left:12px;background:#fff;color:#8b0000;border-radius:30px;padding:5px 10px;font-size:11px;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,.16)}
+.news-card-body{padding:18px;display:flex;flex-direction:column;flex:1}
+.news-date{font-size:12px;color:#8a7b73;margin-bottom:9px}
+.news-card h3{margin:0 0 10px;color:#7b0000;font-size:19px;line-height:1.4}
+.news-card p{line-height:1.65;margin:0;color:#555;font-size:14px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;flex:1}
+.news-read{margin-top:16px;display:inline-flex;align-items:center;justify-content:center;width:max-content;background:#8b0000;color:#fff;text-decoration:none;border-radius:7px;padding:9px 14px;font-size:13px;font-weight:700;cursor:pointer;border:0}
+.news-read:hover{background:#650000}
+.news-loading,.news-empty{grid-column:1/-1;padding:35px;text-align:center;background:#fff;border-radius:12px;color:#666;border:1px dashed #d9c6a0}
+.news-modal{position:fixed;inset:0;background:rgba(0,0,0,.68);z-index:9999;display:none;align-items:center;justify-content:center;padding:18px}
+.news-modal.open{display:flex}
+.news-modal-box{background:#fff;width:min(720px,100%);max-height:90vh;overflow:auto;border-radius:16px;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.35)}
+.news-modal-close{position:absolute;right:12px;top:12px;border:0;background:#8b0000;color:#fff;width:36px;height:36px;border-radius:50%;font-size:22px;cursor:pointer;z-index:2}
+.news-modal-media img{width:100%;max-height:360px;object-fit:cover;display:block}
+.news-modal-content{padding:24px}
+.news-modal-content h2{color:#7b0000;margin:5px 0 12px;line-height:1.4}
+.news-modal-content p{line-height:1.9;color:#444;white-space:pre-line}
+@media(max-width:900px){.news-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.news-grid{grid-template-columns:1fr;gap:18px}.news-media{height:200px}.news-card h3{font-size:18px}.news-modal-content{padding:18px}}
+</style>
+
 </head>
 <body>
 <header><div class="container header">
@@ -77,9 +106,21 @@
 <section id="verify" class="section verify"><div class="container verifybox"><div class="seal">✓</div><div class="heading"><span>DIGITAL VERIFICATION</span><h2>सदस्य सत्यापन</h2><p>Member ID डालकर सदस्यता की स्थिति देखें।</p></div>
 <div class="verifyform"><input id="verifyId" placeholder="BJKP-XXXXXX"><button class="btn red" onclick="verifyMember()">सत्यापित करें</button></div><div id="verifyResult"></div></div></section>
 
+<div id="newsModal" class="news-modal" aria-hidden="true">
+  <div class="news-modal-box" role="dialog" aria-modal="true" aria-labelledby="newsModalTitle">
+    <button class="news-modal-close" id="newsModalClose" aria-label="बंद करें">×</button>
+    <div id="newsModalMedia" class="news-modal-media"></div>
+    <div class="news-modal-content">
+      <div id="newsModalDate" class="news-date"></div>
+      <h2 id="newsModalTitle"></h2>
+      <p id="newsModalText"></p>
+    </div>
+  </div>
+</div>
+
 <footer><div class="container foot"><div class="fbrand"><img src="images/logo.png"><b>भारतीय जन कल्याण पार्टी</b><small>राष्ट्र प्रथम • जन सेवा सर्वोपरि</small></div><div><b>संपर्क</b><span>info.bjkp.org.in@gmail.com</span><span>सोनहा, बस्ती, उत्तर प्रदेश 272190</span></div><div><b>त्वरित लिंक</b><a href="#news">न्यूज़</a><a href="#manifesto">घोषणापत्र</a><a href="#membership">सदस्य बनें</a><a href="admin.html">Admin</a></div></div><div class="copy">© 2026 भारतीय जन कल्याण पार्टी (BJKP) · सर्वाधिकार सुरक्षित</div></footer>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="config.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script><script src="app.js?v=6"></script><script src="news.js?v=1"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="config.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script><script src="app.js?v=6"></script><script src="news.js?v=2"></script>
 <script>
 document.addEventListener("DOMContentLoaded",()=>{const m=document.getElementById("menu"),n=document.getElementById("nav");m?.addEventListener("click",()=>n.classList.toggle("open"));
 const p=document.getElementById("memberPhoto"),v=document.getElementById("photoPreview");p?.addEventListener("change",()=>{const f=p.files?.[0];if(!f){v.hidden=true;return}if(!f.type.startsWith("image/")||f.size>5242880){alert("केवल image और 5 MB तक की फोटो चुनें।");p.value="";v.hidden=true;return}v.src=URL.createObjectURL(f);v.hidden=false})});
