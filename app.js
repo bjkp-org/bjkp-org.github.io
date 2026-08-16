@@ -1,15 +1,16 @@
 let sb = null;
 
 
-/* ================================
+/* =========================================================
    SUPABASE CONNECTION
-================================ */
+========================================================= */
 
 async function loadSB(){
 
   if(sb) return sb;
 
   if(typeof supabase === "undefined"){
+    console.error("Supabase library नहीं मिली।");
     return null;
   }
 
@@ -17,6 +18,7 @@ async function loadSB(){
     typeof SUPABASE_URL === "undefined" ||
     typeof SUPABASE_ANON_KEY === "undefined"
   ){
+    console.error("config.js में Supabase settings नहीं मिलीं।");
     return null;
   }
 
@@ -29,28 +31,31 @@ async function loadSB(){
 }
 
 
-/* ================================
-   SECURITY / HTML SAFE
-================================ */
+/* =========================================================
+   SAFE HTML
+========================================================= */
 
 function safe(v){
 
   return String(v ?? "-").replace(
     /[&<>"]/g,
-    m => ({
-      "&":"&amp;",
-      "<":"&lt;",
-      ">":"&gt;",
-      '"':"&quot;"
-    }[m])
-  );
+    function(m){
 
+      return {
+        "&":"&amp;",
+        "<":"&lt;",
+        ">":"&gt;",
+        '"':"&quot;"
+      }[m];
+
+    }
+  );
 }
 
 
-/* ================================
+/* =========================================================
    MEMBER ID
-================================ */
+========================================================= */
 
 function makeId(){
 
@@ -63,104 +68,79 @@ function makeId(){
 }
 
 
-/* ================================
+/* =========================================================
    MEMBER PHOTO UPLOAD
-================================ */
+========================================================= */
 
 async function uploadMemberPhoto(file,id){
 
   const c = await loadSB();
 
-  if(!c){
+  if(!c)
     throw Error("Supabase connect नहीं है।");
-  }
 
-  if(
-    !file ||
-    !file.type.startsWith("image/")
-  ){
+  if(!file || !file.type.startsWith("image/"))
     throw Error("कृपया फोटो चुनें।");
-  }
 
-  if(file.size > 5242880){
-
-    throw Error(
-      "फोटो 5 MB से छोटी होनी चाहिए।"
-    );
-
-  }
+  if(file.size > 5242880)
+    throw Error("फोटो 5 MB से छोटी होनी चाहिए।");
 
   const ext =
     (
-      file.name
-        .split(".")
-        .pop() || "jpg"
+      file.name.split(".").pop() || "jpg"
     )
     .replace(/[^a-z0-9]/gi,"")
     .toLowerCase() || "jpg";
 
-
   const path =
-    id +
-    "/" +
+    id + "/" +
     Date.now() +
     "." +
     ext;
 
+  const {
+    error
+  } = await c.storage
+    .from("member-photos")
+    .upload(
+      path,
+      file,
+      {
+        upsert:false,
+        contentType:file.type
+      }
+    );
 
-  const {error} =
-    await c.storage
-      .from("member-photos")
-      .upload(
-        path,
-        file,
-        {
-          upsert:false,
-          contentType:file.type
-        }
-      );
-
-
-  if(error){
-
+  if(error)
     throw Error(
       "फोटो upload नहीं हुई: " +
       error.message
     );
-
-  }
-
 
   return c.storage
     .from("member-photos")
     .getPublicUrl(path)
     .data
     .publicUrl;
-
 }
 
 
-/* ================================
+/* =========================================================
    MEMBERSHIP APPLICATION
-================================ */
+========================================================= */
 
 async function submitMembership(e){
 
   e.preventDefault();
 
-
-  const f =
-    new FormData(e.target);
+  const f = new FormData(e.target);
 
   const r =
     document.getElementById("result");
 
-  const id =
-    makeId();
+  const id = makeId();
 
-  const photo =
-    f.get("photo");
-
+  const photo = f.get("photo");
 
   const d = {
 
@@ -181,11 +161,9 @@ async function submitMembership(e){
     role:
       f.get("role")?.trim(),
 
-    status:
-      "pending",
+    status:"pending",
 
-    photo_url:
-      null
+    photo_url:null
 
   };
 
@@ -204,9 +182,7 @@ async function submitMembership(e){
   }
 
 
-  const c =
-    await loadSB();
-
+  const c = await loadSB();
 
   if(!c){
 
@@ -230,19 +206,15 @@ async function submitMembership(e){
       );
 
 
-    const {error} =
-      await c
-        .from("members")
-        .insert([d]);
+    const {
+      error
+    } = await c
+      .from("members")
+      .insert([d]);
 
 
-    if(error){
-
-      throw Error(
-        error.message
-      );
-
-    }
+    if(error)
+      throw Error(error.message);
 
 
     e.target.reset();
@@ -253,23 +225,27 @@ async function submitMembership(e){
         "photoPreview"
       );
 
-
-    if(preview){
-
+    if(preview)
       preview.hidden = true;
-
-    }
 
 
     r.innerHTML =
       "<div class='about-grid'>" +
+
       "<article>" +
+
       "<h3>आवेदन सफल!</h3>" +
+
       "<p>Application ID: <b>" +
       safe(id) +
       "</b></p>" +
-      "<p>Admin approval के बाद Digital ID जारी होगी।</p>" +
+
+      "<p>" +
+      "Admin द्वारा स्तर और पद निर्धारित करके approval दिया जाएगा।" +
+      "</p>" +
+
       "</article>" +
+
       "</div>";
 
 
@@ -285,9 +261,9 @@ async function submitMembership(e){
 }
 
 
-/* ================================
+/* =========================================================
    DIGITAL MEMBER CARD
-================================ */
+========================================================= */
 
 function showDigitalCard(d){
 
@@ -296,10 +272,8 @@ function showDigitalCard(d){
       "verifyResult"
     );
 
-
   const p =
     d.photo_url || "";
-
 
   const u =
     location.origin +
@@ -338,12 +312,10 @@ function showDigitalCard(d){
 
         (
           p
-          ?
-          '<img src="' +
-          safe(p) +
-          '">'
-          :
-          "फोटो उपलब्ध नहीं"
+          ? '<img src="' +
+            safe(p) +
+            '">'
+          : "फोटो उपलब्ध नहीं"
         ) +
 
       '</div>' +
@@ -358,14 +330,12 @@ function showDigitalCard(d){
         '</b>' +
         '</p>' +
 
-
         '<p>' +
         '<span>Member ID</span>' +
         '<b>' +
         safe(d.member_id) +
         '</b>' +
         '</p>' +
-
 
         '<p>' +
         '<span>मोबाइल</span>' +
@@ -374,7 +344,6 @@ function showDigitalCard(d){
         '</b>' +
         '</p>' +
 
-
         '<p>' +
         '<span>जिला</span>' +
         '<b>' +
@@ -382,26 +351,19 @@ function showDigitalCard(d){
         '</b>' +
         '</p>' +
 
-
         '<p>' +
         '<span>पार्टी स्तर</span>' +
         '<b>' +
-        safe(
-          d.party_level_text || "—"
-        ) +
+        safe(d.party_level_text) +
         '</b>' +
         '</p>' +
-
 
         '<p>' +
         '<span>पद</span>' +
         '<b>' +
-        safe(
-          d.party_position_text || "—"
-        ) +
+        safe(d.party_position_text) +
         '</b>' +
         '</p>' +
-
 
         '<p>' +
         '<span>स्थिति</span>' +
@@ -410,15 +372,12 @@ function showDigitalCard(d){
 
       '</div>' +
 
-
       '<div id="memberQRCode"></div>' +
 
     '</div>';
 
 
-  if(
-    typeof QRCode !== "undefined"
-  ){
+  if(typeof QRCode !== "undefined"){
 
     new QRCode(
       document.getElementById(
@@ -436,26 +395,27 @@ function showDigitalCard(d){
 }
 
 
-/* ================================
-   MEMBER VERIFICATION
-================================ */
+/* =========================================================
+   VERIFY MEMBER
+========================================================= */
 
 async function verifyMember(){
 
-  const id =
-    document
-      .getElementById(
-        "verifyId"
-      )
-      ?.value
-      .trim()
-      .toUpperCase();
-
+  const input =
+    document.getElementById(
+      "verifyId"
+    );
 
   const o =
     document.getElementById(
       "verifyResult"
     );
+
+
+  const id =
+    input?.value
+      .trim()
+      .toUpperCase();
 
 
   if(!id){
@@ -464,13 +424,10 @@ async function verifyMember(){
       "<p>Member ID डालें।</p>";
 
     return;
-
   }
 
 
-  const c =
-    await loadSB();
-
+  const c = await loadSB();
 
   if(!c){
 
@@ -478,24 +435,22 @@ async function verifyMember(){
       "<p>Database connect नहीं है।</p>";
 
     return;
-
   }
 
 
   const {
     data,
     error
-  } =
-    await c
-      .from("members")
-      .select(
-        "member_id,name,mobile,email,district,role,status,approved_at,photo_url,party_level_text,party_position_text"
-      )
-      .eq(
-        "member_id",
-        id
-      )
-      .maybeSingle();
+  } = await c
+    .from("members")
+    .select(
+      "member_id,name,mobile,email,district,role,status,approved_at,photo_url,party_level_text,party_position_text"
+    )
+    .eq(
+      "member_id",
+      id
+    )
+    .maybeSingle();
 
 
   if(error){
@@ -506,7 +461,6 @@ async function verifyMember(){
       "</p>";
 
     return;
-
   }
 
 
@@ -516,31 +470,36 @@ async function verifyMember(){
       "<p>Member ID नहीं मिली।</p>";
 
     return;
-
   }
 
 
-  if(
-    data.status !==
-    "approved"
-  ){
+  if(data.status !== "approved"){
 
     o.innerHTML =
+
       "<div class='about-grid'>" +
+
       "<article>" +
+
       "<h3>BJKP सदस्यता आवेदन</h3>" +
+
       "<p>नाम: " +
       safe(data.name) +
       "</p>" +
+
       "<p>स्थिति: " +
       safe(data.status) +
       "</p>" +
-      "<p>Admin approval के बाद Digital ID जारी होगी।</p>" +
+
+      "<p>" +
+      "Admin approval के बाद Digital ID जारी होगी।" +
+      "</p>" +
+
       "</article>" +
+
       "</div>";
 
     return;
-
   }
 
 
@@ -549,9 +508,9 @@ async function verifyMember(){
 }
 
 
-/* ================================
+/* =========================================================
    ADMIN LOGIN
-================================ */
+========================================================= */
 
 async function adminLogin(){
 
@@ -577,19 +536,29 @@ async function adminLogin(){
 
 
   const msg =
-    document.getElementById(
-      "loginMsg"
-    );
+    document
+      .getElementById(
+        "loginMsg"
+      );
 
 
   if(!c){
 
     if(msg)
       msg.textContent =
-        "Supabase config नहीं मिली।";
+        "Supabase connect नहीं है।";
 
     return;
+  }
 
+
+  if(!email || !password){
+
+    if(msg)
+      msg.textContent =
+        "Email और Password डालें।";
+
+    return;
   }
 
 
@@ -598,13 +567,15 @@ async function adminLogin(){
       "Login हो रहा है...";
 
 
-  const {error} =
-    await c.auth.signInWithPassword({
+  const {
+    error
+  } = await c.auth.signInWithPassword({
 
-      email,
-      password
+    email:email,
 
-    });
+    password:password
+
+  });
 
 
   if(error){
@@ -615,7 +586,6 @@ async function adminLogin(){
         error.message;
 
     return;
-
   }
 
 
@@ -643,64 +613,47 @@ async function adminLogin(){
 }
 
 
-/* ================================
+/* =========================================================
    ADMIN LOGOUT
-================================ */
+========================================================= */
 
 async function adminLogout(){
 
   const c =
     await loadSB();
 
-
   if(c)
     await c.auth.signOut();
-
 
   location.reload();
 
 }
 
 
-/* ================================
-   PARTY LEVELS
-================================ */
-
-const PARTY_LEVELS = [
-
-  "राष्ट्रीय स्तर",
-
-  "प्रदेश स्तर",
-
-  "मंडल/नगर स्तर",
-
-  "जिला स्तर",
-
-  "ब्लॉक स्तर",
-
-  "ग्राम/वार्ड स्तर"
-
-];
-
-
-/* ================================
-   PARTY POSITIONS
-================================ */
+/* =========================================================
+   PARTY LEVELS + POSITIONS
+========================================================= */
 
 const PARTY_POSITIONS = {
 
   "राष्ट्रीय स्तर":[
 
     "राष्ट्रीय अध्यक्ष",
-    "राष्ट्रीय कार्यकारी अध्यक्ष",
+
+    "कार्यकारी राष्ट्रीय अध्यक्ष",
+
     "राष्ट्रीय उपाध्यक्ष",
+
     "राष्ट्रीय महासचिव",
+
     "राष्ट्रीय सचिव",
+
     "राष्ट्रीय कोषाध्यक्ष",
+
     "राष्ट्रीय संगठन महासचिव",
+
     "राष्ट्रीय प्रवक्ता",
-    "राष्ट्रीय मीडिया प्रभारी",
-    "राष्ट्रीय आईटी/सोशल मीडिया प्रभारी",
+
     "राष्ट्रीय कार्यकारिणी सदस्य"
 
   ],
@@ -709,359 +662,244 @@ const PARTY_POSITIONS = {
   "प्रदेश स्तर":[
 
     "प्रदेश अध्यक्ष",
-    "प्रदेश कार्यकारी अध्यक्ष",
+
+    "कार्यकारी प्रदेश अध्यक्ष",
+
     "प्रदेश उपाध्यक्ष",
+
     "प्रदेश महासचिव",
+
     "प्रदेश सचिव",
+
     "प्रदेश कोषाध्यक्ष",
+
     "प्रदेश संगठन महासचिव",
+
     "प्रदेश प्रवक्ता",
-    "प्रदेश मीडिया प्रभारी",
-    "प्रदेश आईटी/सोशल मीडिया प्रभारी",
+
     "प्रदेश कार्यकारिणी सदस्य"
 
   ],
 
 
-  "मंडल/नगर स्तर":[
+  "मंडल स्तर":[
 
-    "मंडल/नगर अध्यक्ष",
-    "मंडल/नगर उपाध्यक्ष",
-    "मंडल/नगर महासचिव",
-    "मंडल/नगर सचिव",
-    "मंडल/नगर कोषाध्यक्ष",
-    "मंडल/नगर प्रवक्ता",
-    "मंडल/नगर कार्यकारिणी सदस्य"
+    "मंडल अध्यक्ष",
+
+    "मंडल उपाध्यक्ष",
+
+    "मंडल महासचिव",
+
+    "मंडल सचिव",
+
+    "मंडल कोषाध्यक्ष",
+
+    "मंडल संगठन मंत्री",
+
+    "मंडल प्रवक्ता",
+
+    "मंडल कार्यकारिणी सदस्य"
 
   ],
 
 
   "जिला स्तर":[
 
-    "जिला अध्यक्ष",
-    "जिला कार्यकारी अध्यक्ष",
+    "जिलाध्यक्ष",
+
     "जिला उपाध्यक्ष",
+
     "जिला महासचिव",
+
     "जिला सचिव",
+
     "जिला कोषाध्यक्ष",
-    "जिला संगठन महासचिव",
+
+    "जिला संगठन मंत्री",
+
     "जिला प्रवक्ता",
-    "जिला मीडिया प्रभारी",
-    "जिला आईटी/सोशल मीडिया प्रभारी",
+
     "जिला कार्यकारिणी सदस्य"
 
   ],
 
 
-  "ब्लॉक स्तर":[
+  "तहसील/ब्लॉक स्तर":[
+
+    "तहसील अध्यक्ष",
 
     "ब्लॉक अध्यक्ष",
+
+    "तहसील उपाध्यक्ष",
+
     "ब्लॉक उपाध्यक्ष",
+
+    "तहसील महासचिव",
+
     "ब्लॉक महासचिव",
+
+    "तहसील सचिव",
+
     "ब्लॉक सचिव",
-    "ब्लॉक कोषाध्यक्ष",
-    "ब्लॉक कार्यकारिणी सदस्य"
+
+    "तहसील संगठन मंत्री",
+
+    "ब्लॉक संगठन मंत्री",
+
+    "कार्यकारिणी सदस्य"
 
   ],
 
 
   "ग्राम/वार्ड स्तर":[
 
-    "ग्राम/वार्ड अध्यक्ष",
-    "ग्राम/वार्ड उपाध्यक्ष",
-    "ग्राम/वार्ड महासचिव",
-    "ग्राम/वार्ड सचिव",
-    "ग्राम/वार्ड कोषाध्यक्ष",
-    "ग्राम/वार्ड कार्यकारिणी सदस्य"
+    "ग्राम अध्यक्ष",
+
+    "वार्ड अध्यक्ष",
+
+    "ग्राम उपाध्यक्ष",
+
+    "वार्ड उपाध्यक्ष",
+
+    "ग्राम सचिव",
+
+    "वार्ड सचिव",
+
+    "ग्राम संगठन मंत्री",
+
+    "वार्ड संगठन मंत्री",
+
+    "कार्यकारिणी सदस्य"
 
   ]
 
 };
 
 
-/* ================================
-   APPROVAL UI
-================================ */
+/* =========================================================
+   CREATE LEVEL SELECT
+========================================================= */
 
-function partyLevelOptions(){
+function createLevelSelect(id){
+
+  let html =
+    '<select id="level-' +
+    safe(id) +
+    '" onchange="updatePositionOptions(\'' +
+    safe(id) +
+    '\')">';
+
+  html +=
+    '<option value="">स्तर चुनें</option>';
+
+
+  Object.keys(
+    PARTY_POSITIONS
+  ).forEach(function(level){
+
+    html +=
+      '<option value="' +
+      safe(level) +
+      '">' +
+      safe(level) +
+      '</option>';
+
+  });
+
+
+  html += "</select>";
+
+  return html;
+
+}
+
+
+/* =========================================================
+   CREATE POSITION SELECT
+========================================================= */
+
+function createPositionSelect(id){
 
   return (
 
-    '<option value="">पार्टी स्तर चुनें</option>' +
+    '<select id="position-' +
+    safe(id) +
+    '">' +
 
-    PARTY_LEVELS
-      .map(
-        x =>
-          '<option value="' +
-          safe(x) +
-          '">' +
-          safe(x) +
-          '</option>'
-      )
-      .join("")
+    '<option value="">पहले स्तर चुनें</option>' +
+
+    '</select>'
 
   );
 
 }
 
 
-function positionOptions(level){
+/* =========================================================
+   UPDATE POSITION OPTIONS
+========================================================= */
 
-  const list =
-    PARTY_POSITIONS[level] ||
-    [
-      "सामान्य सदस्य",
-      "स्वयंसेवक"
-    ];
+function updatePositionOptions(id){
 
-
-  return (
-
-    '<option value="">पद चुनें</option>' +
-
-    list
-      .map(
-        x =>
-          '<option value="' +
-          safe(x) +
-          '">' +
-          safe(x) +
-          '</option>'
-      )
-      .join("")
-
-  );
-
-}
-
-
-/* ================================
-   OPEN APPROVAL
-================================ */
-
-function approveMember(id){
-
-  const box =
-    document.getElementById(
-      "approveBox-" + id
-    );
-
-
-  if(box)
-    box.hidden = false;
-
-}
-
-
-/* ================================
-   CLOSE APPROVAL
-================================ */
-
-function cancelApprove(id){
-
-  const box =
-    document.getElementById(
-      "approveBox-" + id
-    );
-
-
-  if(box)
-    box.hidden = true;
-
-}
-
-
-/* ================================
-   CHANGE LEVEL
-================================ */
-
-function changePartyLevel(id){
-
-  const level =
+  const levelSelect =
     document.getElementById(
       "level-" + id
     );
 
 
-  const position =
+  const positionSelect =
     document.getElementById(
       "position-" + id
     );
 
 
-  if(!level || !position)
+  if(!levelSelect || !positionSelect)
     return;
 
-
-  position.innerHTML =
-    positionOptions(
-      level.value
-    );
-
-}
-
-
-/* ================================
-   FINAL APPROVE
-================================ */
-
-async function confirmApprove(id){
 
   const level =
-    document.getElementById(
-      "level-" + id
-    )?.value;
+    levelSelect.value;
 
 
-  const position =
-    document.getElementById(
-      "position-" + id
-    )?.value;
+  positionSelect.innerHTML =
+    '<option value="">पद चुनें</option>';
 
 
-  if(!level){
-
-    alert(
-      "पहले पार्टी स्तर चुनें।"
-    );
-
-    return;
-
-  }
-
-
-  if(!position){
-
-    alert(
-      "पहले पद चुनें।"
-    );
-
-    return;
-
-  }
-
-
-  const c =
-    await loadSB();
-
-
-  if(!c)
+  if(!level)
     return;
 
 
-  const {
-    error
-  } =
-    await c
-      .from("members")
-      .update({
+  const positions =
+    PARTY_POSITIONS[level] || [];
 
-        status:
-          "approved",
 
-        approved_at:
-          new Date().toISOString(),
+  positions.forEach(
+    function(position){
 
-        party_level_text:
-          level,
+      const option =
+        document.createElement(
+          "option"
+        );
 
-        party_position_text:
-          position
+      option.value =
+        position;
 
-      })
-      .eq(
-        "member_id",
-        id
+      option.textContent =
+        position;
+
+      positionSelect.appendChild(
+        option
       );
 
-
-  if(error){
-
-    alert(
-      "Approval failed: " +
-      error.message
-    );
-
-    return;
-
-  }
-
-
-  alert(
-    "✅ सदस्य Approved\n\n" +
-    "पार्टी स्तर: " +
-    level +
-    "\nपद: " +
-    position
+    }
   );
 
-
-  loadMembers();
-
 }
 
 
-/* ================================
-   REJECT
-================================ */
-
-async function rejectMember(id){
-
-  if(
-    !confirm(
-      "क्या आप इस आवेदन को Reject करना चाहते हैं?"
-    )
-  )
-    return;
-
-
-  const c =
-    await loadSB();
-
-
-  if(!c)
-    return;
-
-
-  const {
-    error
-  } =
-    await c
-      .from("members")
-      .update({
-
-        status:
-          "rejected",
-
-        approved_at:
-          null
-
-      })
-      .eq(
-        "member_id",
-        id
-      );
-
-
-  if(error){
-
-    alert(
-      error.message
-    );
-
-    return;
-
-  }
-
-
-  loadMembers();
-
-}
-
-
-/* ================================
+/* =========================================================
    LOAD MEMBERS
-================================ */
+========================================================= */
 
 async function loadMembers(){
 
@@ -1076,26 +914,39 @@ async function loadMembers(){
   const {
     data,
     error
-  } =
-    await c
-      .from("members")
-      .select("*")
-      .order(
-        "created_at",
-        {
-          ascending:false
-        }
-      );
+  } = await c
+    .from("members")
+    .select("*")
+    .order(
+      "created_at",
+      {
+        ascending:false
+      }
+    );
 
 
   if(error){
 
     console.error(
+      "Members load error:",
       error
     );
 
-    return;
+    const m =
+      document.getElementById(
+        "members"
+      );
 
+    if(m){
+
+      m.innerHTML =
+        "<tr><td colspan='8'>" +
+        safe(error.message) +
+        "</td></tr>";
+
+    }
+
+    return;
   }
 
 
@@ -1103,44 +954,40 @@ async function loadMembers(){
     data || [];
 
 
-  const total =
+  /* STATS */
+
+  const totalEl =
     document.getElementById(
       "total"
     );
 
-
-  const pending =
+  const pendingEl =
     document.getElementById(
       "pending"
     );
 
-
-  const approved =
+  const approvedEl =
     document.getElementById(
       "approved"
     );
 
 
-  if(total)
-    total.textContent =
+  if(totalEl)
+    totalEl.textContent =
       rows.length;
 
 
-  if(pending)
-    pending.textContent =
+  if(pendingEl)
+    pendingEl.textContent =
       rows.filter(
-        x =>
-          x.status ===
-          "pending"
+        x => x.status === "pending"
       ).length;
 
 
-  if(approved)
-    approved.textContent =
+  if(approvedEl)
+    approvedEl.textContent =
       rows.filter(
-        x =>
-          x.status ===
-          "approved"
+        x => x.status === "approved"
       ).length;
 
 
@@ -1154,140 +1001,350 @@ async function loadMembers(){
     return;
 
 
+  if(!rows.length){
+
+    m.innerHTML =
+      "<tr><td colspan='8'>" +
+      "कोई सदस्य आवेदन नहीं है।" +
+      "</td></tr>";
+
+    return;
+  }
+
+
   m.innerHTML =
-    rows
-      .map(x => {
+    rows.map(function(x){
 
-        const position =
-          x.party_position_text ||
-          "—";
+      const id =
+        String(x.member_id || "");
 
 
-        const level =
-          x.party_level_text ||
-          "—";
-
-
-        let action = "—";
-
-
-        if(
-          x.status ===
-          "pending"
-        ){
-
-          action =
-
-            '<button class="btn" ' +
-            'onclick="approveMember(\'' +
-            safe(x.member_id) +
-            '\')">' +
-            'Approve' +
-            '</button> ' +
-
-            '<button class="btn red" ' +
-            'onclick="rejectMember(\'' +
-            safe(x.member_id) +
-            '\')">' +
-            'Reject' +
-            '</button>' +
-
-            '<div id="approveBox-' +
-            safe(x.member_id) +
-            '" hidden ' +
-            'style="margin-top:10px;padding:12px;border:1px solid #ddd;border-radius:10px;background:#fff;">' +
-
-              '<b>सदस्य को पद दें</b>' +
-
-              '<select id="level-' +
-              safe(x.member_id) +
-              '" ' +
-              'onchange="changePartyLevel(\'' +
-              safe(x.member_id) +
-              '\')" ' +
-              'style="display:block;width:100%;margin:8px 0;padding:10px;">' +
-
-                partyLevelOptions() +
-
-              '</select>' +
-
-              '<select id="position-' +
-              safe(x.member_id) +
-              '" ' +
-              'style="display:block;width:100%;margin:8px 0;padding:10px;">' +
-
-                '<option value="">पहले पार्टी स्तर चुनें</option>' +
-
-              '</select>' +
-
-              '<button class="btn red" ' +
-              'onclick="confirmApprove(\'' +
-              safe(x.member_id) +
-              '\')">' +
-              '✓ Final Approve' +
-              '</button> ' +
-
-              '<button class="btn" ' +
-              'onclick="cancelApprove(\'' +
-              safe(x.member_id) +
-              '\')">' +
-              'Cancel' +
-              '</button>' +
-
-            '</div>';
-
-        }
-
+      if(x.status === "pending"){
 
         return (
 
-          '<tr>' +
+          "<tr>" +
 
-            '<td>' +
-            safe(x.member_id) +
-            '</td>' +
+          "<td>" +
+          safe(x.member_id) +
+          "</td>" +
 
-            '<td>' +
-            safe(x.name) +
-            '</td>' +
+          "<td>" +
+          safe(x.name) +
+          "</td>" +
 
-            '<td>' +
-            safe(x.mobile) +
-            '</td>' +
+          "<td>" +
+          safe(x.mobile) +
+          "</td>" +
 
-            '<td>' +
-            safe(x.district) +
-            '</td>' +
+          "<td>" +
+          safe(x.district) +
+          "</td>" +
 
-            '<td>' +
-            safe(x.status) +
-            '</td>' +
+          "<td>" +
+          safe(x.status) +
+          "</td>" +
 
-            '<td>' +
-            safe(level) +
-            '</td>' +
+          "<td>" +
 
-            '<td>' +
-            safe(position) +
-            '</td>' +
+            '<div class="position-box">' +
 
-            '<td>' +
-            action +
-            '</td>' +
+              createLevelSelect(id) +
 
-          '</tr>'
+              '<div class="position-info">' +
+              "सदस्य के लिए स्तर चुनें" +
+              "</div>" +
+
+            "</div>" +
+
+          "</td>" +
+
+          "<td>" +
+
+            '<div class="position-box">' +
+
+              createPositionSelect(id) +
+
+            "</div>" +
+
+          "</td>" +
+
+          "<td>" +
+
+            '<button class="approve-btn" ' +
+            'onclick="approveMember(\'' +
+            safe(id) +
+            '\')">' +
+
+            "✓ Approve" +
+
+            "</button> " +
+
+            '<button class="reject-btn" ' +
+            'onclick="rejectMember(\'' +
+            safe(id) +
+            '\')">' +
+
+            "✕ Reject" +
+
+            "</button>" +
+
+          "</td>" +
+
+          "</tr>"
 
         );
 
-      })
-      .join("");
+      }
+
+
+      return (
+
+        "<tr>" +
+
+        "<td>" +
+        safe(x.member_id) +
+        "</td>" +
+
+        "<td>" +
+        safe(x.name) +
+        "</td>" +
+
+        "<td>" +
+        safe(x.mobile) +
+        "</td>" +
+
+        "<td>" +
+        safe(x.district) +
+        "</td>" +
+
+        "<td>" +
+        safe(x.status) +
+        "</td>" +
+
+        "<td>" +
+        safe(x.party_level_text || "-") +
+        "</td>" +
+
+        "<td>" +
+        safe(x.party_position_text || "-") +
+        "</td>" +
+
+        "<td>—</td>" +
+
+        "</tr>"
+
+      );
+
+    }).join("");
 
 }
 
 
-/* ================================
+/* =========================================================
+   APPROVE MEMBER WITH POSITION
+========================================================= */
+
+async function approveMember(id){
+
+  const levelSelect =
+    document.getElementById(
+      "level-" + id
+    );
+
+
+  const positionSelect =
+    document.getElementById(
+      "position-" + id
+    );
+
+
+  if(!levelSelect){
+
+    alert(
+      "पार्टी स्तर का चयन नहीं मिला।"
+    );
+
+    return;
+  }
+
+
+  const level =
+    levelSelect.value;
+
+
+  const position =
+    positionSelect?.value;
+
+
+  if(!level){
+
+    alert(
+      "पहले पार्टी स्तर चुनें।"
+    );
+
+    levelSelect.focus();
+
+    return;
+  }
+
+
+  if(!position){
+
+    alert(
+      "पहले पद चुनें।"
+    );
+
+    positionSelect?.focus();
+
+    return;
+  }
+
+
+  const confirmText =
+
+    "क्या आप इस सदस्य को\n\n" +
+
+    "स्तर: " +
+    level +
+    "\n" +
+
+    "पद: " +
+    position +
+    "\n\n" +
+
+    "के साथ APPROVE करना चाहते हैं?";
+
+
+  if(!confirm(confirmText))
+    return;
+
+
+  const c =
+    await loadSB();
+
+
+  if(!c)
+    return;
+
+
+  const {
+    error
+  } = await c
+    .from("members")
+    .update({
+
+      status:"approved",
+
+      party_level_text:
+        level,
+
+      party_position_text:
+        position,
+
+      approved_at:
+        new Date().toISOString()
+
+    })
+    .eq(
+      "member_id",
+      id
+    );
+
+
+  if(error){
+
+    alert(
+      "Approval failed:\n" +
+      error.message
+    );
+
+    return;
+  }
+
+
+  alert(
+    "सदस्य सफलतापूर्वक Approved हो गया।\n\n" +
+    "पद: " +
+    position
+  );
+
+
+  await loadMembers();
+
+}
+
+
+/* =========================================================
+   REJECT MEMBER
+========================================================= */
+
+async function rejectMember(id){
+
+  if(
+    !confirm(
+      "क्या आप इस सदस्य के आवेदन को Reject करना चाहते हैं?"
+    )
+  ){
+
+    return;
+
+  }
+
+
+  const c =
+    await loadSB();
+
+
+  if(!c)
+    return;
+
+
+  const {
+    error
+  } = await c
+    .from("members")
+    .update({
+
+      status:"rejected",
+
+      party_level_text:null,
+
+      party_position_text:null,
+
+      approved_at:null
+
+    })
+    .eq(
+      "member_id",
+      id
+    );
+
+
+  if(error){
+
+    alert(
+      "Reject failed:\n" +
+      error.message
+    );
+
+    return;
+  }
+
+
+  alert(
+    "सदस्य का आवेदन Reject कर दिया गया।"
+  );
+
+
+  await loadMembers();
+
+}
+
+
+/* =========================================================
    AUTO VERIFY
-================================ */
+========================================================= */
 
 function autoVerifyFromURL(){
 
@@ -1310,7 +1367,6 @@ function autoVerifyFromURL(){
       input.value =
         id;
 
-
       setTimeout(
         verifyMember,
         400
@@ -1323,13 +1379,13 @@ function autoVerifyFromURL(){
 }
 
 
-/* ================================
-   PAGE LOAD
-================================ */
+/* =========================================================
+   PAGE START
+========================================================= */
 
 document.addEventListener(
   "DOMContentLoaded",
-  () => {
+  async function(){
 
     const f =
       document.getElementById(
@@ -1350,48 +1406,55 @@ document.addEventListener(
     autoVerifyFromURL();
 
 
-    loadSB().then(
-      async c => {
+    /* ADMIN PAGE */
 
-        if(!c)
-          return;
-
-
-        const {
-          data
-        } =
-          await c.auth.getSession();
+    const dashboard =
+      document.getElementById(
+        "dashboard"
+      );
 
 
-        if(
-          data?.session
-        ){
-
-          document
-            .getElementById(
-              "loginBox"
-            )
-            ?.setAttribute(
-              "hidden",
-              ""
-            );
+    const loginBox =
+      document.getElementById(
+        "loginBox"
+      );
 
 
-          document
-            .getElementById(
-              "dashboard"
-            )
-            ?.removeAttribute(
-              "hidden"
-            );
+    if(
+      dashboard &&
+      loginBox
+    ){
+
+      const c =
+        await loadSB();
 
 
-          loadMembers();
+      if(!c)
+        return;
 
-        }
+
+      const {
+        data
+      } =
+        await c.auth.getSession();
+
+
+      if(data?.session){
+
+        loginBox.setAttribute(
+          "hidden",
+          ""
+        );
+
+        dashboard.removeAttribute(
+          "hidden"
+        );
+
+        loadMembers();
 
       }
-    );
+
+    }
 
   }
 );
