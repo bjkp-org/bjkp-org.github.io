@@ -4,7 +4,76 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>BJKP Admin Panel</title>
+
 <link rel="stylesheet" href="style.css">
+
+<style>
+.admin-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  flex-wrap:wrap;
+}
+
+.admin-actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.position-box{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  min-width:160px;
+}
+
+.position-box select{
+  padding:9px;
+  border:1px solid #ddd;
+  border-radius:7px;
+  background:#fff;
+}
+
+.approve-btn{
+  background:#8b0000;
+  color:#fff;
+  border:0;
+  padding:9px 13px;
+  border-radius:7px;
+  cursor:pointer;
+}
+
+.reject-btn{
+  background:#b00020;
+  color:#fff;
+  border:0;
+  padding:9px 13px;
+  border-radius:7px;
+  cursor:pointer;
+}
+
+.position-info{
+  font-size:12px;
+  color:#777;
+  margin-top:3px;
+}
+
+@media(max-width:700px){
+  .tableWrap{
+    overflow-x:auto;
+  }
+
+  table{
+    min-width:1000px;
+  }
+
+  .position-box{
+    min-width:180px;
+  }
+}
+</style>
 </head>
 
 <body>
@@ -12,18 +81,25 @@
 <header>
   <div class="brand">
     <div class="logo">BJKP</div>
+
     <div>
       <b>Admin Panel</b>
       <small>सदस्य एवं समाचार प्रबंधन</small>
     </div>
   </div>
 
-  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-    <a class="btn" href="index.html">Website</a>
+  <div class="admin-header">
+    <div class="admin-actions">
 
-    <a class="btn red" href="admin-news.html">
-      📰 News Management
-    </a>
+      <a class="btn" href="index.html">
+        🌐 Website
+      </a>
+
+      <a class="btn red" href="admin-news.html">
+        📰 News Management
+      </a>
+
+    </div>
   </div>
 </header>
 
@@ -31,24 +107,27 @@
 <main class="section">
 
   <!-- LOGIN -->
+
   <div id="loginBox" class="card">
 
     <h2>Admin Login</h2>
 
     <p>
-      Admin account से login करें।
+      Admin Email और Password से Login करें।
     </p>
 
     <input
       id="adminEmail"
       type="email"
       placeholder="Admin Email"
+      autocomplete="username"
     >
 
     <input
       id="adminPassword"
       type="password"
       placeholder="Password"
+      autocomplete="current-password"
     >
 
     <button class="btn" onclick="adminLogin()">
@@ -61,7 +140,10 @@
 
 
   <!-- DASHBOARD -->
+
   <div id="dashboard" hidden>
+
+    <!-- STATS -->
 
     <div class="stats">
 
@@ -83,19 +165,21 @@
     </div>
 
 
-    <!-- NEWS -->
+    <!-- NEWS MANAGEMENT -->
+
     <div class="card" style="margin:20px 0;padding:20px;">
 
       <h2>📰 News Management</h2>
 
       <p>
-        वेबसाइट की खबरें जोड़ने और Manage करने के लिए
-        News Admin Panel खोलें।
+        वेबसाइट पर नई खबर जोड़ने, प्रकाशित करने और पुरानी खबरों को
+        Manage करने के लिए News Admin Panel खोलें।
       </p>
 
       <a
         href="admin-news.html"
         class="btn red"
+        style="display:inline-block;margin-top:8px;"
       >
         📰 News Admin खोलें →
       </a>
@@ -104,7 +188,13 @@
 
 
     <!-- MEMBERS -->
+
     <h2>Membership Applications</h2>
+
+    <p>
+      Pending सदस्य को Approve करने से पहले उसका स्तर और पद चुनें।
+    </p>
+
 
     <div class="tableWrap">
 
@@ -118,24 +208,26 @@
             <th>मोबाइल</th>
             <th>जिला</th>
             <th>स्थिति</th>
+
             <th>पार्टी स्तर</th>
+
             <th>पद</th>
+
             <th>Action</th>
           </tr>
 
         </thead>
 
-        <tbody id="members"></tbody>
+        <tbody id="members">
+
+        </tbody>
 
       </table>
 
     </div>
 
 
-    <button
-      class="btn"
-      onclick="adminLogout()"
-    >
+    <button class="btn" onclick="adminLogout()">
       Logout
     </button>
 
@@ -144,11 +236,13 @@
 </main>
 
 
+<!-- SUPABASE -->
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script src="config.js"></script>
 
-<script src="app.js"></script>
+<script src="app.js?v=position1"></script>
 
 </body>
 </html>
