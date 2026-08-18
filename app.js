@@ -1458,3 +1458,187 @@ document.addEventListener(
 
   }
 );
+
+/* =========================================================
+   BJKP PARTY GALLERY — ADMIN + HOMEPAGE
+   Works with Supabase table: party_gallery
+   Storage bucket: party-gallery
+   ========================================================= */
+
+async function uploadGalleryMedia(file, id){
+  const c = await loadSB();
+  if(!c) throw Error("Supabase connect नहीं है।");
+  if(!file) throw Error("फोटो/वीडियो चुनें।");
+  if(!file.type.startsWith("image/") && !file.type.startsWith("video/"))
+    throw Error("केवल फोटो या वीडियो upload करें।");
+  if(file.size > 20 * 1024 * 1024)
+    throw Error("फाइल 20 MB से छोटी होनी चाहिए।");
+
+  const ext = (file.name.split(".").pop() || "bin")
+    .replace(/[^a-z0-9]/gi,"").toLowerCase() || "bin";
+  const path = id + "/" + Date.now() + "." + ext;
+
+  const { error } = await c.storage.from("party-gallery").upload(
+    path, file, { upsert:false, contentType:file.type }
+  );
+  if(error) throw Error("Gallery media upload नहीं हुई: " + error.message);
+
+  return c.storage.from("party-gallery").getPublicUrl(path).data.publicUrl;
+}
+
+async function saveGalleryItem(e){
+  e.preventDefault();
+  const form = e.target;
+  const fd = new FormData(form);
+  const id = "G-" + Date.now() + "-" +
+    Math.random().toString(36).slice(2,7).toUpperCase();
+
+  const file = fd.get("gallery_file") || fd.get("file");
+  const title = String(fd.get("gallery_title") || fd.get("title") || "").trim();
+  const description = String(fd.get("gallery_description") || fd.get("description") || "").trim();
+  const typeField = String(fd.get("gallery_type") || fd.get("type") || "").trim();
+
+  const result = document.getElementById("galleryResult");
+  if(!file || !file.name){
+    if(result) result.textContent = "कृपया फोटो/वीडियो चुनें।";
+    return;
+  }
+
+  const c = await loadSB();
+  if(!c){
+    if(result) result.textContent = "Database connect नहीं है।";
+    return;
+  }
+
+  try{
+    if(result) result.textContent = "Gallery media upload हो रही है...";
+    const mediaUrl = await uploadGalleryMedia(file, id);
+    const mediaType = typeField ||
+      (file.type.startsWith("video/") ? "video" : "image");
+
+    const row = {
+      id:id,
+      title:title || null,
+      description:description || null,
+      media_url:mediaUrl,
+      media_type:mediaType,
+      published:true
+    };
+
+    const { error } = await c.from("party_gallery").insert([row]);
+    if(error) throw Error(error.message);
+
+    form.reset();
+    if(result) result.textContent = "Gallery में सफलतापूर्वक जोड़ दिया गया।";
+    await loadGalleryAdmin();
+    await loadPartyGallery();
+  }catch(err){
+    if(result) result.textContent = safe(err.message);
+  }
+}
+
+async function loadGalleryAdmin(){
+  const c = await loadSB();
+  if(!c) return;
+
+  const box = document.getElementById("galleryAdminList");
+  if(!box) return;
+
+  const { data, error } = await c.from("party_gallery")
+    .select("*").order("created_at",{ascending:false});
+
+  if(error){
+    box.innerHTML = "<p>" + safe(error.message) + "</p>";
+    return;
+  }
+
+  const rows = data || [];
+  if(!rows.length){
+    box.innerHTML = "<p>अभी Gallery में कोई item नहीं है।</p>";
+    return;
+  }
+
+  box.innerHTML = rows.map(function(x){
+    const media = x.media_type === "video"
+      ? "<video src='"+safe(x.media_url)+"' controls muted></video>"
+      : "<img src='"+safe(x.media_url)+"' alt='"+safe(x.title || "Gallery")+"'>";
+    const published = x.published !== false;
+
+    return "<article class='gallery-admin-item' data-gallery-id='"+safe(x.id)+"'>" +
+      media +
+      "<div><b>"+safe(x.title || "बिना शीर्षक")+"</b>" +
+      "<p>"+safe(x.description || "")+"</p>" +
+      "<button type='button' onclick=\"toggleGalleryPublished('"+safe(x.id)+"',"+(!published)+")\">"+
+      (published ? "छिपाएँ" : "प्रकाशित करें")+"</button> " +
+      "<button type='button' onclick=\"deleteGalleryItem('"+safe(x.id)+"')\">हटाएँ</button>" +
+      "</div></article>";
+  }).join("");
+}
+
+async function toggleGalleryPublished(id, value){
+  const c = await loadSB();
+  if(!c) return;
+  const { error } = await c.from("party_gallery")
+    .update({published:!!value}).eq("id",id);
+  if(error){ alert("Update failed: " + error.message); return; }
+  await loadGalleryAdmin();
+  await loadPartyGallery();
+}
+
+async function deleteGalleryItem(id){
+  if(!confirm("क्या आप इस Gallery item को हटाना चाहते हैं?")) return;
+  const c = await loadSB();
+  if(!c) return;
+
+  const { error } = await c.from("party_gallery").delete().eq("id",id);
+  if(error){ alert("Delete failed: " + error.message); return; }
+
+  await loadGalleryAdmin();
+  await loadPartyGallery();
+}
+
+async function loadPartyGallery(){
+  const c = await loadSB();
+  if(!c) return;
+
+  const box = document.getElementById("partyGallery");
+  if(!box) return;
+
+  const { data, error } = await c.from("party_gallery")
+    .select("*")
+    .eq("published",true)
+    .order("created_at",{ascending:false});
+
+  if(error){
+    console.error("Gallery load error:",error);
+    return;
+  }
+
+  const rows = data || [];
+  if(!rows.length){
+    box.innerHTML = "<p>अभी Gallery में कोई सामग्री प्रकाशित नहीं है।</p>";
+    return;
+  }
+
+  box.innerHTML = rows.map(function(x){
+    const media = x.media_type === "video"
+      ? "<video src='"+safe(x.media_url)+"' controls preload='metadata'></video>"
+      : "<img src='"+safe(x.media_url)+"' loading='lazy' alt='"+safe(x.title || "BJKP Gallery")+"'>";
+    return "<article class='gallery-card'>" + media +
+      "<div class='gallery-card-body'><h3>"+safe(x.title || "")+
+      "</h3><p>"+safe(x.description || "")+"</p></div></article>";
+  }).join("");
+}
+
+function initGalleryFeatures(){
+  const f = document.getElementById("galleryForm");
+  if(f && !f.dataset.galleryBound){
+    f.addEventListener("submit",saveGalleryItem);
+    f.dataset.galleryBound = "1";
+  }
+  loadPartyGallery();
+  loadGalleryAdmin();
+}
+
+document.addEventListener("DOMContentLoaded", initGalleryFeatures);
+
