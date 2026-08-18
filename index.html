@@ -45,11 +45,15 @@
 .news-modal-content p{line-height:1.9;color:#444;white-space:pre-line}
 @media(max-width:900px){.news-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:600px){.news-grid{grid-template-columns:1fr;gap:18px}.news-media{height:200px}.news-card h3{font-size:18px}.news-modal-content{padding:18px}}
+
+.top-strip{background:#4b0000;color:#ffe9a9;font-size:12px}
+.top-strip-inner{min-height:28px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+@media(max-width:600px){.top-strip-inner{justify-content:center}.top-strip-inner span:last-child{display:none}}
 </style>
 
 </head>
 <body>
-<header><div class="container header">
+<div class="top-strip"><div class="container top-strip-inner"><span>🇮🇳 भारतीय जन कल्याण पार्टी (BJKP)</span><span>राष्ट्र प्रथम • जन सेवा सर्वोपरि</span></div></div><header><div class="container header">
 <a class="brand" href="#home"><img src="images/logo.png" class="logo"><span><b>भारतीय जन कल्याण पार्टी</b><small>राष्ट्र प्रथम • जन सेवा सर्वोपरि</small></span></a>
 <button id="menu" class="menu">☰</button>
 <nav id="nav"><a href="#home">होम</a><a href="#about">हमारे बारे में</a><a href="#policies">नीतियाँ</a><a href="#news">न्यूज़</a><a href="#manifesto">घोषणापत्र</a><a href="#membership">सदस्य बनें</a><a href="#verify">सत्यापन</a><a href="certificate.html">प्रमाण-पत्र</a><a href="admin.html">Admin</a></nav>
