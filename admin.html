@@ -73,6 +73,7 @@
     min-width:180px;
   }
 }
+.gallery-admin-card{margin:25px 0}.gallery-admin-form{margin-top:18px}.gallery-form-grid{display:grid;grid-template-columns:1.5fr 1fr .7fr 1fr;gap:14px;align-items:end}.gallery-admin-form textarea{width:100%;margin-top:6px;padding:12px;border:1px solid #d9cec2;border-radius:6px;font:inherit;resize:vertical}.gallery-check{display:flex;align-items:center;gap:8px;padding-bottom:12px}.gallery-check input{width:auto;margin:0}.gallery-preview{width:150px;max-height:150px;object-fit:cover;border:2px solid #d6a83b;border-radius:8px;margin:10px 0}.gallery-success,.gallery-error{margin-top:12px;padding:10px;border-radius:7px}.gallery-success{background:#eaf7ea;color:#1d6b2b}.gallery-error{background:#fff0f0;color:#9b111e}.gallery-small-btn{border:0;background:#8b0000;color:#fff;padding:7px 9px;border-radius:5px;cursor:pointer}.gallery-small-btn.danger{background:#7a0010}.gallery-empty-cell{text-align:center}@media(max-width:900px){.gallery-form-grid{grid-template-columns:1fr 1fr}}@media(max-width:600px){.gallery-form-grid{grid-template-columns:1fr}}
 </style>
 </head>
 
@@ -187,6 +188,40 @@
     </div>
 
 
+    <!-- PARTY GALLERY -->
+
+    <section id="galleryManager" class="card gallery-admin-card">
+      <div class="admin-header">
+        <div>
+          <h2>📷 पार्टी गैलरी Management</h2>
+          <p>यहाँ से Home Page की फोटो और वीडियो गैलरी को जोड़ें, बदलें, छिपाएँ या हटाएँ।</p>
+        </div>
+      </div>
+
+      <form id="galleryForm" class="gallery-admin-form">
+        <input type="hidden" id="galleryId">
+        <div class="gallery-form-grid">
+          <label>शीर्षक<input id="galleryTitle" placeholder="जैसे: स्वतंत्रता दिवस कार्यक्रम" required></label>
+          <label>मीडिया प्रकार<select id="galleryType"><option value="image">📷 फोटो</option><option value="video">▶️ वीडियो</option></select></label>
+          <label>Display Order<input id="galleryOrder" type="number" value="0" min="0"></label>
+          <label class="gallery-check"><input id="galleryPublished" type="checkbox" checked> Home Page पर प्रकाशित करें</label>
+        </div>
+        <label>Media URL <small>(यदि file upload नहीं करना है तो URL डाल सकते हैं)</small><input id="galleryUrl" type="url" placeholder="https://..."></label>
+        <label class="upload">📁 फोटो/वीडियो Upload<input id="galleryFile" type="file" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm"><small>फोटो अधिकतम 8 MB • वीडियो अधिकतम 50 MB</small></label>
+        <img id="galleryPreview" class="gallery-preview" alt="Gallery Preview" hidden>
+        <label>विवरण<textarea id="galleryDescription" rows="3" placeholder="कार्यक्रम या फोटो के बारे में संक्षिप्त जानकारी"></textarea></label>
+        <div class="admin-actions"><button id="gallerySubmit" class="btn red" type="submit">गैलरी में जोड़ें</button><button id="galleryReset" class="btn" type="button">नया / साफ करें</button></div>
+        <div id="galleryMsg"></div>
+      </form>
+
+      <div class="tableWrap" style="margin-top:22px">
+        <table class="gallery-table">
+          <thead><tr><th>Type</th><th>शीर्षक</th><th>मीडिया</th><th>स्थिति</th><th>Order</th><th>Link</th><th>Action</th></tr></thead>
+          <tbody id="galleryRows"><tr><td colspan="7">गैलरी लोड हो रही है...</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
     <!-- MEMBERS -->
 
     <h2>Membership Applications</h2>
@@ -242,7 +277,7 @@
 
 <script src="config.js"></script>
 
-<script src="app.js?v=position1"></script>
+<script src="app.js?v=position1"></script><script src="gallery-admin.js?v=1"></script>
 
 </body>
 </html>
