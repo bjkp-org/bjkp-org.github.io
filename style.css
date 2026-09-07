@@ -80,3 +80,66 @@ a{text-decoration:none;color:inherit}img{max-width:100%;display:block}.container
 .hero-leader-card{min-width:0;}
 .nav{flex-wrap:nowrap;}
 @media(max-width:850px){.nav{flex-wrap:wrap;}.hero-copy{min-width:0;}.hero h1{overflow-wrap:anywhere;}.hero-text{max-width:100%;}}
+
+/* =========================================================
+   PREMIUM BJKP DIGITAL ID CARD
+   Scoped to .bjkp-id-* so homepage styles never break it.
+========================================================= */
+.bjkp-id-wrap{width:min(760px,100%);margin:24px auto 8px;font-family:Arial,"Noto Sans Devanagari","Mangal",sans-serif}
+.bjkp-id-card{position:relative;overflow:hidden;min-height:430px;border-radius:22px;border:1px solid #d5a83b;background:linear-gradient(135deg,#430000 0%,#760700 48%,#4a0000 100%);color:#fff;box-shadow:0 24px 60px rgba(47,0,0,.28),0 5px 18px rgba(0,0,0,.12);isolation:isolate}
+.bjkp-id-glow{position:absolute;width:360px;height:360px;right:-160px;top:-190px;border-radius:50%;background:radial-gradient(circle,#f3c84d44 0,#f3c84d12 42%,transparent 70%);z-index:-1}
+.bjkp-id-pattern{position:absolute;inset:0;opacity:.08;background-image:radial-gradient(circle at 20px 20px,#fff 1px,transparent 1.5px),linear-gradient(120deg,transparent 40%,#fff 40.5%,transparent 41%);background-size:28px 28px,90px 90px;pointer-events:none;z-index:-1}
+.bjkp-id-top{display:flex;justify-content:space-between;align-items:center;gap:18px;padding:22px 25px 15px}
+.bjkp-id-brand{display:flex;align-items:center;gap:13px;min-width:0}
+.bjkp-id-logo-ring{width:62px;height:62px;flex:0 0 62px;border-radius:50%;display:grid;place-items:center;background:#fff;border:3px solid #e0b84b;box-shadow:0 5px 18px #0005}
+.bjkp-id-logo-ring img{width:84%!important;height:84%!important;max-width:none!important;object-fit:contain!important;border-radius:50%}
+.bjkp-id-brand-text{min-width:0}
+.bjkp-id-party{font-size:20px;font-weight:900;line-height:1.2;color:#fff5d2}
+.bjkp-id-english{font-size:9px;font-weight:900;letter-spacing:1.2px;color:#e9c768;margin-top:3px}
+.bjkp-id-motto{font-size:10px;font-weight:800;color:#fff;opacity:.9;margin-top:4px}
+.bjkp-id-approved{white-space:nowrap;border:1px solid #f1d37b;background:#ffffff12;border-radius:999px;padding:7px 11px;font-size:10px;font-weight:900;letter-spacing:.5px;box-shadow:inset 0 1px #fff3}
+.bjkp-id-approved span{display:inline-grid;place-items:center;width:17px;height:17px;margin-right:4px;border-radius:50%;background:#16813a;color:#fff}
+.bjkp-id-divider{height:1px;margin:0 25px;background:linear-gradient(90deg,transparent,#e4bd55,transparent)}
+.bjkp-id-title-row{display:flex;justify-content:space-between;align-items:end;padding:15px 25px 8px}
+.bjkp-id-kicker{display:block;font-size:9px;letter-spacing:1.8px;font-weight:900;color:#e8c768}
+.bjkp-id-title-row h3{margin:3px 0 0;font-size:20px;line-height:1.2;letter-spacing:.4px;color:#fff}
+.bjkp-id-year{font-size:27px;font-weight:900;color:#f1d277;line-height:1}
+.bjkp-id-main{display:grid;grid-template-columns:150px 1fr;gap:20px;align-items:center;padding:10px 25px 17px}
+.bjkp-id-photo-col{text-align:center}
+.bjkp-id-photo-frame{position:relative;width:128px;height:158px;margin:auto;padding:4px;border-radius:10px;background:linear-gradient(145deg,#f8dc76,#b67a15);box-shadow:0 8px 22px #0006}
+.bjkp-id-photo-frame:before{content:"";position:absolute;inset:4px;border:1px solid #fff9;border-radius:7px;pointer-events:none;z-index:2}
+.bjkp-id-photo-frame img{width:100%!important;height:100%!important;max-width:none!important;object-fit:cover!important;border-radius:6px;background:#fff}
+.bjkp-id-photo-shine{position:absolute;inset:5px;border-radius:6px;background:linear-gradient(120deg,#fff2 0%,transparent 38%,transparent 100%);pointer-events:none}
+.bjkp-id-photo-label{margin-top:7px;font-size:8px;letter-spacing:1.4px;font-weight:900;color:#e8c768}
+.bjkp-id-details{min-width:0}
+.bjkp-id-name-label{font-size:8px;letter-spacing:1.4px;color:#e3c269;font-weight:900}
+.bjkp-id-name{font-size:28px;font-weight:900;line-height:1.15;color:#fff;margin:2px 0 11px;overflow-wrap:anywhere;text-shadow:0 2px 12px #0004}
+.bjkp-id-position-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:10px}
+.bjkp-id-highlight{min-height:57px;padding:8px 10px;border:1px solid #e0b94f;border-radius:9px;background:linear-gradient(135deg,#8d0e06,#5a0000);box-shadow:inset 0 1px #fff2}
+.bjkp-id-highlight.gold{background:linear-gradient(135deg,#b98720,#70500b)}
+.bjkp-id-highlight span{display:block;font-size:8px;font-weight:900;color:#f8dda0;letter-spacing:.5px}
+.bjkp-id-highlight strong{display:block;font-size:15px;line-height:1.25;color:#fff;margin-top:3px;overflow-wrap:anywhere}
+.bjkp-id-info-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px 14px}
+.bjkp-id-info-grid>div{min-width:0;padding:5px 0;border-bottom:1px solid #ffffff20}
+.bjkp-id-info-grid span{display:inline-block;color:#e5c878;font-size:8px;font-weight:900;margin-right:6px}
+.bjkp-id-info-grid b{font-size:10px;color:#fff;overflow-wrap:anywhere}
+.bjkp-id-bottom{display:grid;grid-template-columns:1fr 110px;align-items:center;gap:15px;margin:0 25px;padding:11px 0;border-top:1px solid #ffffff20}
+.bjkp-id-validity span{display:block;font-size:8px;letter-spacing:1.3px;color:#e5c878;font-weight:900}
+.bjkp-id-validity strong{display:block;font-size:11px;color:#8be3a7;margin-top:2px}
+.bjkp-id-validity small{display:block;color:#fff9;font-size:8px;margin-top:3px}
+.bjkp-id-qr-area{text-align:center}
+.bjkp-id-qr{display:inline-block;padding:5px;background:#fff;border-radius:7px;line-height:0;box-shadow:0 3px 12px #0005}
+.bjkp-id-qr img{display:block!important;width:92px!important;height:92px!important;max-width:none!important}
+.bjkp-id-qr-area small{display:block;margin-top:4px;color:#e5c878;font-size:7px;font-weight:900;letter-spacing:1px}
+.bjkp-id-footer{display:flex;justify-content:space-between;gap:10px;padding:8px 25px;background:#32000099;border-top:1px solid #ffffff1a;color:#e7c66e;font-size:7px;letter-spacing:.8px;font-weight:900}
+.bjkp-id-actions{display:flex;justify-content:center;gap:9px;flex-wrap:wrap;margin:13px 0 0}
+.bjkp-id-action{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:9px 15px;border-radius:8px;font-size:12px;font-weight:900;text-decoration:none;cursor:pointer;border:1px solid #d4a73c}
+.bjkp-id-action.primary{background:#8b0000;color:#fff}
+.bjkp-id-action.secondary{background:#fff4d1;color:#6b1008}
+@media(max-width:600px){
+ .bjkp-id-card{border-radius:16px;min-height:0}
+ .bjkp-id-top{padding:16px 14px 12px;align-items:flex-start}
+ .bjkp-id-brand{gap:9px}.bjkp-id-logo-ring{width:48px;height:48px;flex-basis:48px}.bjkp-id-party{font-size:15px}.bjkp-id-english{font-size:7px}.bjkp-id-motto{font-size:8px}.bjkp-id-approved{padding:5px 7px;font-size:8px}.bjkp-id-approved span{width:14px;height:14px}
+ .bjkp-id-divider{margin:0 14px}.bjkp-id-title-row{padding:12px 14px 7px}.bjkp-id-title-row h3{font-size:15px}.bjkp-id-year{font-size:21px}.bjkp-id-kicker{font-size:7px}
+ .bjkp-id-main{grid-template-columns:95px 1fr;gap:11px;padding:8px 14px 13px}.bjkp-id-photo-frame{width:88px;height:112px}.bjkp-id-name{font-size:20px;margin-bottom:8px}.bjkp-id-position-grid{gap:5px;margin-bottom:7px}.bjkp-id-highlight{min-height:50px;padding:6px}.bjkp-id-highlight strong{font-size:11px}.bjkp-id-info-grid{gap:2px 7px}.bjkp-id-info-grid span{display:block;font-size:7px}.bjkp-id-info-grid b{font-size:8px}.bjkp-id-bottom{grid-template-columns:1fr 78px;gap:7px;margin:0 14px;padding:8px 0}.bjkp-id-validity strong{font-size:9px}.bjkp-id-validity small{font-size:7px}.bjkp-id-qr img{width:64px!important;height:64px!important}.bjkp-id-qr{padding:4px}.bjkp-id-footer{padding:7px 14px;font-size:6px}.bjkp-id-actions{padding:0 4px}.bjkp-id-action{width:100%}
+}

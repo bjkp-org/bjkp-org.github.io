@@ -267,131 +267,139 @@ async function submitMembership(e){
 
 function showDigitalCard(d){
 
-  const o =
-    document.getElementById(
-      "verifyResult"
-    );
+  const o = document.getElementById("verifyResult");
+  if(!o) return;
 
-  const p =
-    d.photo_url || "";
+  const photo = d.photo_url || "images/logo.png";
+  const memberId = d.member_id || "—";
+  const level = d.party_level_text || "सामान्य सदस्य";
+  const position = d.party_position_text || "सामान्य सदस्य";
+  const district = d.district || "—";
+  const mobile = d.mobile || "—";
+  const role = d.role || "सदस्य";
 
-  const u =
-    location.origin +
-    location.pathname +
-    "?verify=" +
-    encodeURIComponent(
-      d.member_id
-    );
+  const verifyURL = location.origin + location.pathname +
+    "?verify=" + encodeURIComponent(memberId);
 
+  o.innerHTML = `
+    <div class="bjkp-id-wrap">
+      <div class="bjkp-id-card" id="bjkpPrintableCard">
 
-  o.innerHTML =
+        <div class="bjkp-id-glow"></div>
+        <div class="bjkp-id-pattern"></div>
 
-    '<div class="idcard">' +
+        <div class="bjkp-id-top">
+          <div class="bjkp-id-brand">
+            <div class="bjkp-id-logo-ring">
+              <img src="images/logo.png" alt="BJKP Logo">
+            </div>
+            <div class="bjkp-id-brand-text">
+              <div class="bjkp-id-party">भारतीय जन कल्याण पार्टी</div>
+              <div class="bjkp-id-english">BHARATIYA JAN KALYAN PARTY</div>
+              <div class="bjkp-id-motto">राष्ट्र प्रथम • जन सेवा सर्वोपरि</div>
+            </div>
+          </div>
+          <div class="bjkp-id-approved"><span>✓</span> APPROVED</div>
+        </div>
 
-      '<div class="idhead">' +
+        <div class="bjkp-id-divider"></div>
 
-        '<img src="images/logo.png">' +
+        <div class="bjkp-id-title-row">
+          <div>
+            <span class="bjkp-id-kicker">OFFICIAL DIGITAL MEMBERSHIP</span>
+            <h3>DIGITAL MEMBER ID CARD</h3>
+          </div>
+          <div class="bjkp-id-year">2026</div>
+        </div>
 
-        '<div>' +
+        <div class="bjkp-id-main">
+          <div class="bjkp-id-photo-col">
+            <div class="bjkp-id-photo-frame">
+              <img src="${safe(photo)}" alt="सदस्य की फोटो"
+                   onerror="this.onerror=null;this.src='images/logo.png';">
+              <div class="bjkp-id-photo-shine"></div>
+            </div>
+            <div class="bjkp-id-photo-label">OFFICIAL MEMBER</div>
+          </div>
 
-          '<b>भारतीय जन कल्याण पार्टी</b>' +
+          <div class="bjkp-id-details">
+            <div class="bjkp-id-name-label">MEMBER NAME</div>
+            <div class="bjkp-id-name">${safe(d.name || "सदस्य")}</div>
 
-          '<small>' +
-          'राष्ट्र प्रथम • जन सेवा सर्वोपरि' +
-          '</small>' +
+            <div class="bjkp-id-position-grid">
+              <div class="bjkp-id-highlight">
+                <span>पार्टी स्तर</span>
+                <strong>${safe(level)}</strong>
+              </div>
+              <div class="bjkp-id-highlight gold">
+                <span>पद</span>
+                <strong>${safe(position)}</strong>
+              </div>
+            </div>
 
-        '</div>' +
+            <div class="bjkp-id-info-grid">
+              <div><span>Member ID</span><b>${safe(memberId)}</b></div>
+              <div><span>जिला</span><b>${safe(district)}</b></div>
+              <div><span>मोबाइल</span><b>${safe(mobile)}</b></div>
+              <div><span>भूमिका</span><b>${safe(role)}</b></div>
+            </div>
+          </div>
+        </div>
 
-      '</div>' +
+        <div class="bjkp-id-bottom">
+          <div class="bjkp-id-validity">
+            <span>STATUS</span>
+            <strong>✓ VERIFIED MEMBER</strong>
+            <small>यह कार्ड केवल अनुमोदित सदस्य के लिए मान्य है।</small>
+          </div>
+          <div class="bjkp-id-qr-area">
+            <div id="memberQRCode" class="bjkp-id-qr"></div>
+            <small>SCAN TO VERIFY</small>
+          </div>
+        </div>
 
+        <div class="bjkp-id-footer">
+          <span>BJKP OFFICIAL MEMBERSHIP CARD</span>
+          <span>www.bjkp.org</span>
+        </div>
+      </div>
 
-      '<h3>DIGITAL MEMBER ID CARD</h3>' +
-
-
-      '<div class="idphoto">' +
-
-        (
-          p
-          ? '<img src="' +
-            safe(p) +
-            '">'
-          : "फोटो उपलब्ध नहीं"
-        ) +
-
-      '</div>' +
-
-
-      '<div class="idinfo">' +
-
-        '<p>' +
-        '<span>नाम</span>' +
-        '<b>' +
-        safe(d.name) +
-        '</b>' +
-        '</p>' +
-
-        '<p>' +
-        '<span>Member ID</span>' +
-        '<b>' +
-        safe(d.member_id) +
-        '</b>' +
-        '</p>' +
-
-        '<p>' +
-        '<span>मोबाइल</span>' +
-        '<b>' +
-        safe(d.mobile) +
-        '</b>' +
-        '</p>' +
-
-        '<p>' +
-        '<span>जिला</span>' +
-        '<b>' +
-        safe(d.district) +
-        '</b>' +
-        '</p>' +
-
-        '<p>' +
-        '<span>पार्टी स्तर</span>' +
-        '<b>' +
-        safe(d.party_level_text) +
-        '</b>' +
-        '</p>' +
-
-        '<p>' +
-        '<span>पद</span>' +
-        '<b>' +
-        safe(d.party_position_text) +
-        '</b>' +
-        '</p>' +
-
-        '<p>' +
-        '<span>स्थिति</span>' +
-        '<b>✓ APPROVED</b>' +
-        '</p>' +
-
-      '</div>' +
-
-      '<div id="memberQRCode"></div>' +
-
-    '</div>';
-
+      <div class="bjkp-id-actions">
+        <button type="button" class="bjkp-id-action primary" onclick="printDigitalCard()">🖨️ ID Card Print / PDF</button>
+        <a class="bjkp-id-action secondary" href="certificate.html?member_id=${encodeURIComponent(memberId)}">📜 प्रमाण-पत्र देखें</a>
+      </div>
+    </div>
+  `;
 
   if(typeof QRCode !== "undefined"){
-
-    new QRCode(
-      document.getElementById(
-        "memberQRCode"
-      ),
-      {
-        text:u,
-        width:100,
-        height:100
-      }
-    );
-
+    new QRCode(document.getElementById("memberQRCode"), {
+      text: verifyURL,
+      width: 92,
+      height: 92,
+      correctLevel: QRCode.CorrectLevel.M
+    });
   }
+}
 
+function printDigitalCard(){
+  const card = document.getElementById("bjkpPrintableCard");
+  if(!card) return;
+  const printWindow = window.open("", "BJKP_ID_CARD_PRINT", "width=900,height=700");
+  if(!printWindow) return;
+
+  const styles = Array.from(document.querySelectorAll("link[rel='stylesheet'], style"))
+    .map(el => el.outerHTML).join("\n");
+
+  printWindow.document.write(`<!doctype html><html lang="hi"><head><meta charset="utf-8"><title>BJKP Digital ID Card</title>${styles}
+  <style>
+    body{margin:0;background:#fff!important;display:flex;justify-content:center;align-items:center;min-height:100vh}
+    .bjkp-id-wrap{width:100%;display:flex;justify-content:center}
+    .bjkp-id-actions{display:none!important}
+    .bjkp-id-card{box-shadow:none!important}
+    @page{size:A4;margin:10mm}
+  </style></head><body>${card.outerHTML}</body></html>`);
+  printWindow.document.close();
+  setTimeout(()=>{ printWindow.focus(); printWindow.print(); }, 500);
 }
 
 
