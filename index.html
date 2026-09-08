@@ -91,6 +91,19 @@ a{text-decoration:none;color:inherit}img{max-width:100%;display:block}.container
 .nav{flex-wrap:nowrap;}
 @media(max-width:850px){.nav{flex-wrap:wrap;}.hero-copy{min-width:0;}.hero h1{overflow-wrap:anywhere;}.hero-text{max-width:100%;}}
 
+
+/* =========================================================
+   BJKP PREMIUM HOMEPAGE V2
+========================================================= */
+.announcement-bar{background:linear-gradient(90deg,#4b0000,#8b0000);color:#fff;padding:8px 0;border-bottom:1px solid #d6a83b}.announcement-inner{display:flex;align-items:center;gap:12px;font-size:13px;font-weight:800}.announcement-label{background:#d6a83b;color:#4b0000;padding:4px 10px;border-radius:20px;font-size:11px;white-space:nowrap}.announcement-text{overflow:hidden;white-space:nowrap}.announcement-text span{display:inline-block;animation:bjkpTicker 18s linear infinite}@keyframes bjkpTicker{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
+.quick-links{padding:0;background:#fff;position:relative;z-index:5;margin-top:-34px}.quick-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid #eadfce;border-radius:12px;overflow:hidden;box-shadow:0 14px 35px rgba(70,0,0,.13);background:#fff}.quick-card{display:flex;align-items:center;gap:13px;padding:19px 18px;border-right:1px solid #eadfce;transition:.2s}.quick-card:last-child{border-right:0}.quick-card:hover{background:#fff9ed;transform:translateY(-2px)}.quick-icon{width:43px;height:43px;border-radius:50%;display:grid;place-items:center;background:#fff3cf;border:1px solid #e2c46d;font-size:21px;flex:0 0 auto}.quick-card b{display:block;color:#7b0000;font-size:14px}.quick-card span{display:block;color:#786b63;font-size:11px;margin-top:2px}
+.objectives-section{background:linear-gradient(180deg,#fffaf2,#fff)}.objectives-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px}.objective-card{position:relative;background:#fff;border:1px solid #eadfce;border-left:4px solid #c99a2e;border-radius:10px;padding:20px 20px 20px 62px;box-shadow:0 8px 24px rgba(70,0,0,.07);transition:.2s}.objective-card:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(70,0,0,.11);border-left-color:#8b0000}.objective-no{position:absolute;left:17px;top:18px;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:#8b0000;color:#f7d875;font-size:12px;font-weight:900}.objective-card h3{margin:0 0 6px;color:#790000;font-size:18px;line-height:1.35}.objective-card p{margin:0;color:#5e544d;font-size:13.5px;line-height:1.7}.objectives-more{text-align:center;margin-top:28px}.objectives-note{max-width:780px;margin:0 auto 28px;color:#6c625b;text-align:center}
+.premium-divider{height:1px;background:linear-gradient(90deg,transparent,#d6a83b,transparent);margin:0 auto;width:80%}
+.hero-copy{max-width:760px}.hero h1{text-shadow:0 4px 18px rgba(0,0,0,.2)}.hero-actions .btn{box-shadow:0 7px 18px rgba(0,0,0,.12)}
+.section-head h2{letter-spacing:-.3px}.idea-card,.news-card,.press-card,.leader-feature,.program-grid article,.org-level,.membership-box,.verify-box{transition:transform .22s ease,box-shadow .22s ease}.idea-card:hover,.news-card:hover,.press-card:hover,.program-grid article:hover,.org-level:hover{transform:translateY(-4px);box-shadow:0 16px 35px rgba(70,0,0,.13)}
+@media(max-width:900px){.quick-grid{grid-template-columns:repeat(2,1fr)}.quick-card:nth-child(2){border-right:0}.quick-card:nth-child(-n+2){border-bottom:1px solid #eadfce}.objectives-grid{grid-template-columns:1fr}}
+@media(max-width:600px){.announcement-inner{font-size:11px}.announcement-label{font-size:9px}.quick-links{margin-top:-20px}.quick-grid{grid-template-columns:1fr 1fr}.quick-card{padding:13px 10px;gap:8px}.quick-icon{width:35px;height:35px;font-size:17px}.quick-card b{font-size:11px}.quick-card span{font-size:9px}.objective-card{padding:17px 14px 17px 54px}.objective-card h3{font-size:16px}.objective-card p{font-size:12.5px}.objective-no{left:13px;top:16px;width:30px;height:30px}}
+
 </style>
 </head>
 <body>
@@ -119,6 +132,7 @@ a{text-decoration:none;color:inherit}img{max-width:100%;display:block}.container
       <a href="#about">हमारा विचार</a>
       <a href="#leadership">नेतृत्व</a>
       <a href="#policies">नीतियाँ</a>
+      <a href="#objectives">20 उद्देश्य</a>
       <a href="#news">समाचार</a>
       <a href="#press">प्रेस विज्ञप्ति</a>
       <a href="#programs">कार्यक्रम</a>
@@ -130,6 +144,15 @@ a{text-decoration:none;color:inherit}img{max-width:100%;display:block}.container
     </nav>
   </div>
 </header>
+
+
+<!-- ANNOUNCEMENT BAR -->
+<div class="announcement-bar">
+  <div class="container announcement-inner">
+    <span class="announcement-label">📢 महत्वपूर्ण सूचना</span>
+    <div class="announcement-text"><span>भारतीय जन कल्याण पार्टी — राष्ट्र प्रथम • जन सेवा सर्वोपरि • नवीनतम समाचार, घोषणाएँ और संगठनात्मक जानकारी के लिए वेबसाइट से जुड़े रहें।</span></div>
+  </div>
+</div>
 
 <!-- HERO -->
 <section id="home" class="hero">
@@ -164,6 +187,17 @@ a{text-decoration:none;color:inherit}img{max-width:100%;display:block}.container
   </div>
 </section>
 
+
+<!-- QUICK ACTIONS -->
+<section class="quick-links" aria-label="त्वरित सेवाएँ">
+  <div class="container quick-grid">
+    <a class="quick-card" href="#membership"><div class="quick-icon">🤝</div><div><b>सदस्य बनें</b><span>ऑनलाइन सदस्यता आवेदन</span></div></a>
+    <a class="quick-card" href="#verify"><div class="quick-icon">✓</div><div><b>सदस्य सत्यापन</b><span>Member ID से जाँच करें</span></div></a>
+    <a class="quick-card" href="certificate.html"><div class="quick-icon">📜</div><div><b>प्रमाण-पत्र</b><span>सदस्य प्रमाण-पत्र देखें</span></div></a>
+    <a class="quick-card" href="documents/ghoshna-patra.pdf" target="_blank"><div class="quick-icon">📘</div><div><b>घोषणापत्र</b><span>पार्टी का दस्तावेज़ पढ़ें</span></div></a>
+  </div>
+</section>
+
 <!-- OUR IDEA -->
 <section id="about" class="section idea-section">
   <div class="container">
@@ -190,6 +224,42 @@ a{text-decoration:none;color:inherit}img{max-width:100%;display:block}.container
         <p>शिक्षा, स्वास्थ्य, रोजगार, किसान, ग्रामीण विकास और युवाओं की भागीदारी को मजबूत करना।</p>
       </article>
     </div>
+  </div>
+</section>
+
+
+<!-- 20 OBJECTIVES -->
+<section id="objectives" class="section objectives-section">
+  <div class="container">
+    <div class="section-head">
+      <span>OUR 20 CORE OBJECTIVES</span>
+      <h2>भारतीय जन कल्याण पार्टी के प्रमुख उद्देश्य</h2>
+      <p>राष्ट्रहित, जनसेवा, सामाजिक न्याय और समावेशी विकास को केंद्र में रखकर पार्टी के प्रमुख उद्देश्य।</p>
+    </div>
+    <p class="objectives-note">इन उद्देश्यों के माध्यम से प्रत्येक नागरिक के सम्मान, समान अवसर, बेहतर जीवन और राष्ट्र निर्माण में सक्रिय भागीदारी को बढ़ावा देने का संकल्प।</p>
+    <div class="objectives-grid">
+      <article class="objective-card"><div class="objective-no">01</div><h3>राष्ट्रहित एवं राष्ट्रीय एकता</h3><p>भारत की संप्रभुता, अखंडता, एकता और राष्ट्रहित को सर्वोच्च प्राथमिकता देते हुए देश को मजबूत, सुरक्षित और आत्मनिर्भर बनाने की दिशा में कार्य करना।</p></article>
+      <article class="objective-card"><div class="objective-no">02</div><h3>लोकतंत्र एवं संवैधानिक मूल्यों की रक्षा</h3><p>भारतीय संविधान, लोकतांत्रिक व्यवस्था, कानून के शासन तथा नागरिकों के संवैधानिक अधिकारों और कर्तव्यों के प्रति सम्मान एवं जागरूकता को बढ़ावा देना।</p></article>
+      <article class="objective-card"><div class="objective-no">03</div><h3>जनसेवा को सर्वोच्च प्राथमिकता</h3><p>गरीब, जरूरतमंद, वंचित और कमजोर वर्गों तक सरकारी योजनाओं एवं आवश्यक सुविधाओं की पहुँच सुनिश्चित कराने के लिए जनहित में सक्रिय भूमिका निभाना।</p></article>
+      <article class="objective-card"><div class="objective-no">04</div><h3>शिक्षा का व्यापक विकास</h3><p>हर बच्चे और युवा को गुणवत्तापूर्ण एवं सुलभ शिक्षा उपलब्ध कराने, शिक्षा व्यवस्था में सुधार तथा आर्थिक रूप से कमजोर विद्यार्थियों को आगे बढ़ने के अवसर प्रदान करने के लिए प्रयास करना।</p></article>
+      <article class="objective-card"><div class="objective-no">05</div><h3>युवाओं के लिए रोजगार एवं अवसर</h3><p>युवाओं को रोजगार, स्वरोजगार, कौशल विकास, तकनीकी प्रशिक्षण और उद्यमिता के अवसर उपलब्ध कराने के लिए प्रभावी नीतियों एवं कार्यक्रमों को बढ़ावा देना।</p></article>
+      <article class="objective-card"><div class="objective-no">06</div><h3>किसानों एवं कृषि क्षेत्र का विकास</h3><p>किसानों को उनकी उपज का उचित मूल्य, आधुनिक कृषि तकनीक, सिंचाई, भंडारण, बाजार और आवश्यक कृषि सुविधाएँ उपलब्ध कराने की दिशा में कार्य करना।</p></article>
+      <article class="objective-card"><div class="objective-no">07</div><h3>महिला सशक्तिकरण एवं सम्मान</h3><p>महिलाओं की शिक्षा, सुरक्षा, रोजगार, आर्थिक आत्मनिर्भरता और सामाजिक सम्मान को बढ़ावा देना तथा उन्हें समान अवसर उपलब्ध कराने के लिए कार्य करना।</p></article>
+      <article class="objective-card"><div class="objective-no">08</div><h3>स्वास्थ्य सुविधाओं का विस्तार</h3><p>सभी नागरिकों तक सस्ती, सुलभ और गुणवत्तापूर्ण स्वास्थ्य सेवाएँ पहुँचाने तथा ग्रामीण एवं पिछड़े क्षेत्रों में स्वास्थ्य सुविधाओं को मजबूत करने का प्रयास करना।</p></article>
+      <article class="objective-card"><div class="objective-no">09</div><h3>गरीब एवं वंचित वर्गों का उत्थान</h3><p>आर्थिक और सामाजिक रूप से कमजोर वर्गों के विकास, सम्मान और आत्मनिर्भरता के लिए योजनाओं तथा अवसरों को बढ़ावा देना।</p></article>
+      <article class="objective-card"><div class="objective-no">10</div><h3>भ्रष्टाचार एवं अनियमितताओं के विरुद्ध संघर्ष</h3><p>सरकारी एवं सार्वजनिक व्यवस्था में पारदर्शिता, जवाबदेही और ईमानदारी को बढ़ावा देना तथा भ्रष्टाचार एवं अनियमितताओं के विरुद्ध लोकतांत्रिक एवं संवैधानिक तरीकों से आवाज उठाना।</p></article>
+      <article class="objective-card"><div class="objective-no">11</div><h3>सामाजिक न्याय एवं समान अवसर</h3><p>समाज के प्रत्येक वर्ग को समान अवसर, सम्मान और विकास का अधिकार दिलाने तथा भेदभाव एवं सामाजिक असमानता को कम करने की दिशा में कार्य करना।</p></article>
+      <article class="objective-card"><div class="objective-no">12</div><h3>ग्रामीण विकास को प्राथमिकता</h3><p>गाँवों में सड़क, बिजली, पानी, स्वास्थ्य, शिक्षा, डिजिटल सुविधाओं और रोजगार के अवसरों का विस्तार कर ग्रामीण क्षेत्रों को मजबूत एवं आत्मनिर्भर बनाने का प्रयास करना।</p></article>
+      <article class="objective-card"><div class="objective-no">13</div><h3>छोटे व्यापारियों एवं उद्यमियों का संरक्षण</h3><p>छोटे दुकानदारों, व्यापारियों, कारीगरों और स्थानीय उद्यमियों को आर्थिक एवं नीतिगत सहयोग देकर स्थानीय अर्थव्यवस्था को मजबूत करना।</p></article>
+      <article class="objective-card"><div class="objective-no">14</div><h3>श्रमिक एवं मजदूर हित</h3><p>श्रमिकों और मजदूरों के सम्मानजनक जीवन, उचित पारिश्रमिक, सामाजिक सुरक्षा और रोजगार के सुरक्षित वातावरण के लिए प्रभावी नीतियों को बढ़ावा देना।</p></article>
+      <article class="objective-card"><div class="objective-no">15</div><h3>पर्यावरण संरक्षण</h3><p>जल, जंगल, जमीन और प्राकृतिक संसाधनों की रक्षा करते हुए प्रदूषण नियंत्रण, जल संरक्षण और टिकाऊ विकास को प्राथमिकता देना।</p></article>
+      <article class="objective-card"><div class="objective-no">16</div><h3>युवाओं में राष्ट्र निर्माण की भावना</h3><p>युवाओं को शिक्षा, अनुशासन, सामाजिक जिम्मेदारी, नवाचार और राष्ट्रसेवा से जोड़कर उन्हें देश के विकास में सक्रिय भागीदारी के लिए प्रेरित करना।</p></article>
+      <article class="objective-card"><div class="objective-no">17</div><h3>डिजिटल एवं तकनीकी विकास</h3><p>डिजिटल सेवाओं का लाभ ग्रामीण एवं आम नागरिकों तक पहुँचाने तथा तकनीकी शिक्षा और डिजिटल साक्षरता को बढ़ावा देने के लिए कार्य करना।</p></article>
+      <article class="objective-card"><div class="objective-no">18</div><h3>पारदर्शी एवं जवाबदेह शासन</h3><p>प्रशासनिक व्यवस्था में पारदर्शिता, जवाबदेही, जनभागीदारी और नागरिकों की समस्याओं के समयबद्ध समाधान को सुनिश्चित करने वाली व्यवस्था के लिए प्रयास करना।</p></article>
+      <article class="objective-card"><div class="objective-no">19</div><h3>राष्ट्रीय आत्मनिर्भरता एवं आर्थिक विकास</h3><p>स्थानीय उत्पादन, स्वदेशी उद्यम, रोजगार सृजन, कौशल विकास और नवाचार को बढ़ावा देकर भारत को आर्थिक रूप से अधिक मजबूत एवं आत्मनिर्भर बनाने की दिशा में कार्य करना।</p></article>
+      <article class="objective-card"><div class="objective-no">20</div><h3>जनभागीदारी से विकसित भारत का निर्माण</h3><p>देश के प्रत्येक नागरिक को राष्ट्र निर्माण और जनसेवा की प्रक्रिया से जोड़ते हुए ऐसा भारत बनाने का संकल्प लेना जहाँ विकास, न्याय, अवसर, सम्मान और जनकल्याण सभी के लिए उपलब्ध हों।</p></article>
+    </div>
+    <div class="objectives-more"><a class="btn btn-red" href="#membership">इन उद्देश्यों के साथ जुड़ें →</a></div>
   </div>
 </section>
 
@@ -410,7 +480,7 @@ a{text-decoration:none;color:inherit}img{max-width:100%;display:block}.container
       <p>राष्ट्र प्रथम • जन सेवा सर्वोपरि</p>
       <p class="footer-desc">जनसेवा, सुशासन और राष्ट्र निर्माण के संकल्प के साथ।</p>
     </div>
-    <div><h4>महत्वपूर्ण लिंक</h4><a href="#about">हमारा विचार</a><a href="#policies">नीतियाँ</a><a href="#news">समाचार</a><a href="#press">प्रेस विज्ञप्ति</a><a href="#programs">कार्यक्रम</a></div>
+    <div><h4>महत्वपूर्ण लिंक</h4><a href="#about">हमारा विचार</a><a href="#policies">नीतियाँ</a><a href="#objectives">20 उद्देश्य</a><a href="#news">समाचार</a><a href="#press">प्रेस विज्ञप्ति</a><a href="#programs">कार्यक्रम</a></div>
     <div><h4>पार्टी</h4><a href="#organization">संगठन एवं पदाधिकारी</a><a href="#manifesto">घोषणापत्र</a><a href="#membership">सदस्य बनें</a><a href="certificate.html">प्रमाण-पत्र</a><a href="admin.html">Admin Panel</a></div>
     <div><h4>संपर्क</h4><p>info.bjkp.org.in@gmail.com</p><p>सोनहा, बस्ती, उत्तर प्रदेश 272190</p><div class="footer-social"><a href="https://www.instagram.com/bjkp_organization/" target="_blank" rel="noopener">Instagram</a><a href="#">Facebook</a><a href="#">YouTube</a></div></div>
   </div>
