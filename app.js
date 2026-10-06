@@ -161,6 +161,11 @@ async function submitMembership(e){
     role:
       f.get("role")?.trim(),
 
+    transaction_number:
+      f.get("transaction_number")?.trim(),
+
+    payment_status:"pending",
+
     status:"pending",
 
     photo_url:null
@@ -172,7 +177,8 @@ async function submitMembership(e){
     !d.name ||
     !d.mobile ||
     !d.district ||
-    !photo?.name
+    !photo?.name ||
+    !d.transaction_number
   ){
 
     r.innerHTML =
@@ -181,6 +187,11 @@ async function submitMembership(e){
     return;
   }
 
+  if(!/^[A-Za-z0-9\-_/]{6,40}$/.test(d.transaction_number)){
+    r.innerHTML =
+      "<p>कृपया सही Transaction ID / UTR नंबर दर्ज करें (6-40 अक्षर)।</p>";
+    return;
+  }
 
   const c = await loadSB();
 
@@ -992,11 +1003,19 @@ async function loadMembers(){
       ).length;
 
 
+  const verifiedPayments = rows.filter(
+    x => x.payment_status === "verified"
+  );
+
   if(approvedEl)
     approvedEl.textContent =
       rows.filter(
         x => x.status === "approved"
       ).length;
+
+  const totalAmountEl = document.getElementById("totalAmount");
+  if(totalAmountEl)
+    totalAmountEl.textContent = "₹" + (verifiedPayments.length * 5).toLocaleString("en-IN");
 
 
   const m =
@@ -1054,6 +1073,11 @@ async function loadMembers(){
           "</td>" +
 
           "<td>" +
+          safe(x.transaction_number || "-") +
+          "<br><small>Payment: " + safe(x.payment_status || "pending") + "</small>" +
+          "</td>" +
+
+          "<td>" +
 
             '<div class="position-box">' +
 
@@ -1079,13 +1103,14 @@ async function loadMembers(){
 
           "<td>" +
 
-            '<button class="approve-btn" ' +
-            'onclick="approveMember(\'' +
-            safe(id) +
-            '\')">' +
+            '<button class="payment-verify-btn" onclick="verifyPayment(\'' + safe(id) + '\')">' +
+            (x.payment_status === "verified" ? "✓ Payment Verified" : "₹5 Verify Payment") +
+            "</button> " +
 
+            '<button class="approve-btn" onclick="approveMember(\'' + safe(id) + '\')" ' +
+            (x.payment_status === "verified" ? "" : "disabled") +
+            '">' +
             "✓ Approve" +
-
             "</button> " +
 
             '<button class="reject-btn" ' +
@@ -1148,6 +1173,27 @@ async function loadMembers(){
 
 }
 
+
+/* =========================================================
+   VERIFY ₹5 PAYMENT (ADMIN)
+========================================================= */
+
+async function verifyPayment(id){
+  if(!confirm("क्या आपने UPI payment का Transaction/UTR नंबर देखकर ₹5 भुगतान की पुष्टि कर ली है?")) return;
+  const c = await loadSB();
+  if(!c) return;
+  const {data,error} = await c.from("members")
+    .select("transaction_number")
+    .eq("member_id",id).maybeSingle();
+  if(error){ alert("Payment record नहीं मिला:\n"+error.message); return; }
+  if(!data?.transaction_number){ alert("Transaction number उपलब्ध नहीं है।"); return; }
+  const {error:updateError} = await c.from("members")
+    .update({payment_status:"verified", payment_verified_at:new Date().toISOString()})
+    .eq("member_id",id);
+  if(updateError){ alert("Payment verification failed:\n"+updateError.message); return; }
+  alert("₹5 payment verified. अब सदस्य को Approve किया जा सकता है।");
+  await loadMembers();
+}
 
 /* =========================================================
    APPROVE MEMBER WITH POSITION
@@ -1235,6 +1281,14 @@ async function approveMember(id){
   if(!c)
     return;
 
+  const {data:paymentRow,error:paymentError} = await c.from("members")
+    .select("payment_status,transaction_number")
+    .eq("member_id",id).maybeSingle();
+  if(paymentError){ alert("Payment status नहीं पढ़ा जा सका:\n"+paymentError.message); return; }
+  if(paymentRow?.payment_status !== "verified"){
+    alert("पहले ₹5 payment को Verify Payment बटन से सत्यापित करें।");
+    return;
+  }
 
   const {
     error

@@ -7,6 +7,10 @@ create table if not exists public.members (
   email text,
   district text not null,
   role text not null default 'सामान्य सदस्य',
+  photo_url text,
+  transaction_number text,
+  payment_status text not null default 'pending' check (payment_status in ('pending','verified','rejected')),
+  payment_verified_at timestamptz,
   status text not null default 'pending' check (status in ('pending','approved','rejected')),
   approved_at timestamptz,
   created_at timestamptz not null default now()
@@ -28,3 +32,10 @@ using (status = 'approved');
 create policy "authenticated can manage members"
 on public.members for all to authenticated
 using (true) with check (true);
+
+
+-- Migration for an existing members table
+alter table public.members add column if not exists photo_url text;
+alter table public.members add column if not exists transaction_number text;
+alter table public.members add column if not exists payment_status text not null default 'pending';
+alter table public.members add column if not exists payment_verified_at timestamptz;

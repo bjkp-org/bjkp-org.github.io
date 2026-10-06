@@ -140,6 +140,7 @@ a{text-decoration:none;color:inherit}img{max-width:100%;display:block}.container
       <a href="#gallery">गैलरी</a>
       <a href="#manifesto">घोषणापत्र</a>
       <a href="#membership" class="nav-member">सदस्य बनें</a>
+      <a href="#donation" class="nav-member" style="background:#d6a83b;color:#4d0000">दान करें</a>
       <a href="admin.html">Admin</a>
     </nav>
   </div>
@@ -192,6 +193,7 @@ a{text-decoration:none;color:inherit}img{max-width:100%;display:block}.container
 <section class="quick-links" aria-label="त्वरित सेवाएँ">
   <div class="container quick-grid">
     <a class="quick-card" href="#membership"><div class="quick-icon">🤝</div><div><b>सदस्य बनें</b><span>ऑनलाइन सदस्यता आवेदन</span></div></a>
+    <a class="quick-card" href="#donation"><div class="quick-icon">🙏</div><div><b>दान करें</b><span>पार्टी के जनसेवा अभियान में सहयोग</span></div></a>
     <a class="quick-card" href="#verify"><div class="quick-icon">✓</div><div><b>सदस्य सत्यापन</b><span>Member ID से जाँच करें</span></div></a>
     <a class="quick-card" href="certificate.html"><div class="quick-icon">📜</div><div><b>प्रमाण-पत्र</b><span>सदस्य प्रमाण-पत्र देखें</span></div></a>
     <a class="quick-card" href="documents/ghoshna-patra.pdf" target="_blank"><div class="quick-icon">📘</div><div><b>घोषणापत्र</b><span>पार्टी का दस्तावेज़ पढ़ें</span></div></a>
@@ -418,7 +420,12 @@ a{text-decoration:none;color:inherit}img{max-width:100%;display:block}.container
           <b style="display:block;color:#8b0000;font-size:18px">सदस्यता शुल्क: ₹5</b>
           <p style="margin:6px 0 12px;color:#66584d">QR स्कैन करके ₹5 भुगतान करें। UPI: <b>info.bjkp.org.in@ybl</b></p>
           <img src="images/bjkp-membership-qr.png" alt="₹5 Membership UPI QR" style="width:190px;max-width:70%;border:8px solid #fff;box-shadow:0 3px 12px #0001;border-radius:8px">
-          <p style="font-size:12px;color:#777;margin:10px 0 0">भुगतान के बाद सदस्यता आवेदन भेजें। फिलहाल भुगतान की अंतिम पुष्टि Admin द्वारा की जाएगी।</p>
+          <label style="text-align:left;margin-top:12px">UPI Transaction / Reference Number
+            <input name="transaction_number" id="transactionNumber" placeholder="भुगतान के बाद Transaction/UTR नंबर डालें" inputmode="text" autocomplete="off" minlength="6" maxlength="40" required>
+            <small>₹5 भुगतान के बाद UPI ऐप में दिख रहा Transaction ID/UTR नंबर दर्ज करें।</small>
+          </label>
+          <div id="transactionCheck" style="font-size:12px;margin-top:8px;color:#777"></div>
+          <p style="font-size:12px;color:#777;margin:10px 0 0">Transaction number दर्ज और format-check होने के बाद ही आवेदन submit होगा। भुगतान की वास्तविक पुष्टि Admin द्वारा की जाएगी।</p>
         </div>
         <label class="check"><input name="consent" type="checkbox" required><span>मैं दी गई जानकारी की पुष्टि करता/करती हूँ।</span></label>
         <button class="btn btn-red wide" type="submit">सदस्यता आवेदन भेजें →</button>
@@ -449,6 +456,35 @@ a{text-decoration:none;color:inherit}img{max-width:100%;display:block}.container
         <a href="#" aria-label="Facebook">Facebook</a>
         <a href="#" aria-label="YouTube">YouTube</a>
         <a href="#" aria-label="X">X</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DONATION -->
+<section id="donation" class="section" style="background:#fffaf4">
+  <div class="container">
+    <div class="section-head">
+      <span>SUPPORT BJKP</span>
+      <h2>पार्टी को सहयोग करें</h2>
+      <p>भारतीय जन कल्याण पार्टी के जनसेवा और संगठनात्मक कार्यों में अपनी इच्छानुसार सहयोग करें।</p>
+    </div>
+    <div class="membership-box" style="max-width:900px;margin:auto">
+      <div class="membership-copy">
+        <span>DONATION</span>
+        <h2>जनसेवा में सहयोग</h2>
+        <p>UPI से सीधे सहयोग करें। भुगतान के बाद अपने UPI ऐप का Transaction/UTR नंबर सुरक्षित रखें।</p>
+        <div class="member-points"><b>✓ UPI: info.bjkp.org.in@ybl</b><b>✓ इच्छानुसार राशि</b><b>✓ Transaction ID सुरक्षित रखें</b></div>
+      </div>
+      <div class="membership-form-wrap" style="text-align:center">
+        <b style="display:block;color:#8b0000;font-size:20px">Donation UPI</b>
+        <p style="margin:6px 0 12px;color:#66584d"><b>info.bjkp.org.in@ybl</b></p>
+        <img src="images/bjkp-membership-qr.png" alt="BJKP UPI QR" style="width:210px;max-width:75%;border:8px solid #fff;box-shadow:0 3px 12px #0001;border-radius:8px">
+        <label style="text-align:left;margin-top:16px">दान राशि (₹)
+          <input id="donationAmount" type="number" min="1" step="1" placeholder="जैसे 100">
+        </label>
+        <a id="donationPayBtn" class="btn btn-red wide" href="upi://pay?pa=info.bjkp.org.in%40ybl&pn=BJKP&cu=INR" style="display:block;text-decoration:none;text-align:center;margin-top:10px">UPI ऐप से दान करें →</a>
+        <p style="font-size:12px;color:#777;margin:10px 0 0">नोट: QR/UPI भुगतान की वास्तविक पुष्टि के लिए Transaction/UTR नंबर सुरक्षित रखें।</p>
       </div>
     </div>
   </div>
@@ -504,6 +540,17 @@ document.addEventListener("DOMContentLoaded",()=>{
   m?.addEventListener("click",()=>n.classList.toggle("open"));
   n?.querySelectorAll("a").forEach(a=>a.addEventListener("click",()=>n.classList.remove("open")));
   const p=document.getElementById("memberPhoto"),v=document.getElementById("photoPreview");
+  const donationAmount=document.getElementById("donationAmount");
+  const donationPayBtn=document.getElementById("donationPayBtn");
+  function updateDonationLink(){
+    const amount=Number(donationAmount?.value||0);
+    let url="upi://pay?pa=info.bjkp.org.in%40ybl&pn=BJKP&cu=INR";
+    if(amount>0) url += "&am=" + encodeURIComponent(amount.toFixed(2));
+    if(donationPayBtn) donationPayBtn.href=url;
+  }
+  donationAmount?.addEventListener("input",updateDonationLink);
+  updateDonationLink();
+
   p?.addEventListener("change",()=>{
     const f=p.files?.[0];
     if(!f){v.hidden=true;return}
