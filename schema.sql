@@ -39,3 +39,5 @@ alter table public.members add column if not exists photo_url text;
 alter table public.members add column if not exists transaction_number text;
 alter table public.members add column if not exists payment_status text not null default 'pending';
 alter table public.members add column if not exists payment_verified_at timestamptz;
+alter table public.members add column if not exists transaction_id text;
+alter table public.members add column if not exists payment_amount numeric not null default 5;

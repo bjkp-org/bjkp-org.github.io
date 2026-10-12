@@ -165,6 +165,7 @@ async function submitMembership(e){
       f.get("transaction_number")?.trim(),
 
     payment_status:"pending",
+    payment_amount:5,
 
     status:"pending",
 
@@ -240,24 +241,9 @@ async function submitMembership(e){
       preview.hidden = true;
 
 
-    r.innerHTML =
-      "<div class='about-grid'>" +
-
-      "<article>" +
-
-      "<h3>आवेदन सफल!</h3>" +
-
-      "<p>Application ID: <b>" +
-      safe(id) +
-      "</b></p>" +
-
-      "<p>" +
-      "Admin द्वारा स्तर और पद निर्धारित करके approval दिया जाएगा।" +
-      "</p>" +
-
-      "</article>" +
-
-      "</div>";
+    const notifyText = "BJKP नया सदस्यता आवेदन\nApplication ID: " + id + "\nनाम: " + d.name + "\nमोबाइल: " + d.mobile + "\nजिला: " + d.district + "\nपद/भूमिका: " + (d.role || "सामान्य सदस्य") + "\nTransaction/UTR: " + d.transaction_number + "\nPayment Status: Pending (Admin verification required)";
+    const notifyUrl = "https://wa.me/919559033164?text=" + encodeURIComponent(notifyText);
+    r.innerHTML = "<div class='about-grid'><article><h3>आवेदन सफल!</h3><p>Application ID: <b>" + safe(id) + "</b></p><p>Admin द्वारा भुगतान, स्तर और पद की जाँच के बाद approval दिया जाएगा।</p><a class='btn btn-gold' href='" + notifyUrl + "' target='_blank' rel='noopener'>WhatsApp पर आवेदन सूचना भेजें</a><p><small>फ्री WhatsApp तरीके में यह बटन दबाकर Send करना होगा; संदेश अपने-आप नहीं भेजा जाता।</small></p></article></div>";
 
 
   }catch(x){
@@ -959,7 +945,7 @@ async function loadMembers(){
     if(m){
 
       m.innerHTML =
-        "<tr><td colspan='8'>" +
+        "<tr><td colspan='14'>" +
         safe(error.message) +
         "</td></tr>";
 
@@ -1015,7 +1001,7 @@ async function loadMembers(){
 
   const totalAmountEl = document.getElementById("totalAmount");
   if(totalAmountEl)
-    totalAmountEl.textContent = "₹" + (verifiedPayments.length * 5).toLocaleString("en-IN");
+    totalAmountEl.textContent = "₹" + verifiedPayments.reduce((sum, x) => sum + Number(x.payment_amount ?? 5), 0).toLocaleString("en-IN");
 
 
   const m =
@@ -1031,7 +1017,7 @@ async function loadMembers(){
   if(!rows.length){
 
     m.innerHTML =
-      "<tr><td colspan='8'>" +
+      "<tr><td colspan='14'>" +
       "कोई सदस्य आवेदन नहीं है।" +
       "</td></tr>";
 
@@ -1039,137 +1025,41 @@ async function loadMembers(){
   }
 
 
-  m.innerHTML =
-    rows.map(function(x){
-
-      const id =
-        String(x.member_id || "");
-
-
-      if(x.status === "pending"){
-
-        return (
-
-          "<tr>" +
-
-          "<td>" +
-          safe(x.member_id) +
-          "</td>" +
-
-          "<td>" +
-          safe(x.name) +
-          "</td>" +
-
-          "<td>" +
-          safe(x.mobile) +
-          "</td>" +
-
-          "<td>" +
-          safe(x.district) +
-          "</td>" +
-
-          "<td>" +
-          safe(x.status) +
-          "</td>" +
-
-          "<td>" +
-          safe(x.transaction_number || "-") +
-          "<br><small>Payment: " + safe(x.payment_status || "pending") + "</small>" +
-          "</td>" +
-
-          "<td>" +
-
-            '<div class="position-box">' +
-
-              createLevelSelect(id) +
-
-              '<div class="position-info">' +
-              "सदस्य के लिए स्तर चुनें" +
-              "</div>" +
-
-            "</div>" +
-
-          "</td>" +
-
-          "<td>" +
-
-            '<div class="position-box">' +
-
-              createPositionSelect(id) +
-
-            "</div>" +
-
-          "</td>" +
-
-          "<td>" +
-
-            '<button class="payment-verify-btn" onclick="verifyPayment(\'' + safe(id) + '\')">' +
-            (x.payment_status === "verified" ? "✓ Payment Verified" : "₹5 Verify Payment") +
-            "</button> " +
-
-            '<button class="approve-btn" onclick="approveMember(\'' + safe(id) + '\')" ' +
-            (x.payment_status === "verified" ? "" : "disabled") +
-            '">' +
-            "✓ Approve" +
-            "</button> " +
-
-            '<button class="reject-btn" ' +
-            'onclick="rejectMember(\'' +
-            safe(id) +
-            '\')">' +
-
-            "✕ Reject" +
-
-            "</button>" +
-
-          "</td>" +
-
-          "</tr>"
-
-        );
-
-      }
-
-
-      return (
-
-        "<tr>" +
-
-        "<td>" +
-        safe(x.member_id) +
-        "</td>" +
-
-        "<td>" +
-        safe(x.name) +
-        "</td>" +
-
-        "<td>" +
-        safe(x.mobile) +
-        "</td>" +
-
-        "<td>" +
-        safe(x.district) +
-        "</td>" +
-
-        "<td>" +
-        safe(x.status) +
-        "</td>" +
-
-        "<td>" +
-        safe(x.party_level_text || "-") +
-        "</td>" +
-
-        "<td>" +
-        safe(x.party_position_text || "-") +
-        "</td>" +
-
-        "<td>—</td>" +
-
-        "</tr>"
-
-      );
-
-    }).join("");
+  m.innerHTML = rows.map(function(x){
+    const id = String(x.member_id || "");
+    const date = x.created_at ? new Date(x.created_at).toLocaleString("en-IN") : "—";
+    const verifiedAt = x.payment_verified_at ? new Date(x.payment_verified_at).toLocaleString("en-IN") : "—";
+    const payStatus = x.payment_status || "pending";
+    const memberStatus = x.status || "pending";
+    const payClass = payStatus === "verified" ? "status-verified" : (payStatus === "rejected" ? "status-rejected" : "status-pending");
+    const memberClass = memberStatus === "approved" ? "status-approved" : (memberStatus === "rejected" ? "status-rejected" : "status-pending");
+    const photo = x.photo_url ? '<br><a href="' + safe(x.photo_url) + '" target="_blank" rel="noopener">फोटो देखें</a>' : "";
+    let actions = "—";
+    if(memberStatus === "pending"){
+      actions = '<div class="position-box">' + createLevelSelect(id) + '<div class="position-info">सदस्य के लिए स्तर चुनें</div></div>' +
+        '<div class="position-box">' + createPositionSelect(id) + '</div>' +
+        '<button class="payment-verify-btn" onclick="verifyPayment(\'' + safe(id) + '\')">' + (payStatus === "verified" ? "✓ Payment Verified" : "₹5 Verify Payment") + '</button> ' +
+        '<button class="approve-btn" onclick="approveMember(\'' + safe(id) + '\')" ' + (payStatus === "verified" ? "" : "disabled title=\"पहले भुगतान verify करें\"") + '>✓ Approve</button> ' +
+        '<button class="reject-btn" onclick="rejectMember(\'' + safe(id) + '\')">✕ Reject</button>';
+    }
+    return '<tr>' +
+      '<td><strong>' + safe(x.member_id || "—") + '</strong></td>' +
+      '<td><strong>' + safe(x.name || "—") + '</strong>' + photo + '</td>' +
+      '<td>' + safe(x.mobile || "—") + '</td>' +
+      '<td>' + safe(x.email || "—") + '</td>' +
+      '<td>' + safe(x.district || "—") + '</td>' +
+      '<td>' + safe(date) + '</td>' +
+      '<td><strong>' + safe(x.transaction_number || x.transaction_id || "—") + '</strong></td>' +
+      '<td><span class="status-pill ' + payClass + '">' + safe(payStatus) + '</span></td>' +
+      '<td>₹' + safe(Number(x.payment_amount ?? 5).toLocaleString("en-IN")) + '</td>' +
+      '<td>' + safe(verifiedAt) + '</td>' +
+      '<td><span class="status-pill ' + memberClass + '">' + safe(memberStatus) + '</span></td>' +
+      '<td>' + safe(x.party_level_text || "—") + '</td>' +
+      '<td>' + safe(x.party_position_text || x.role || "—") + '</td>' +
+      '<td>' + actions + '</td>' +
+    '</tr>';
+  }).join("");
+  if(window.bjkpFilterMembers) window.bjkpFilterMembers();
 
 }
 

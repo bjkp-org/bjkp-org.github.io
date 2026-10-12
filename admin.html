@@ -8,6 +8,12 @@
 <link rel="stylesheet" href="style.css">
 
 <style>
+:root{--admin-ink:#2d1b12;--admin-red:#7f1018;--admin-gold:#d6a83b;--admin-muted:#6f625b;--admin-line:#eadfd5;--admin-bg:#fffaf5}
+body{background:#f7f3ee;color:var(--admin-ink)}
+#dashboard{max-width:1440px;margin:auto}
+#loginBox{max-width:520px;margin:40px auto;padding:28px;border:1px solid var(--admin-line);box-shadow:0 14px 38px #3b1b1010}
+#loginBox h2{color:var(--admin-red)}
+#loginBox input{width:100%;box-sizing:border-box;margin:8px 0 14px;padding:13px;border:1px solid var(--admin-line);border-radius:10px;font:inherit}
 .admin-header{
   display:flex;
   justify-content:space-between;
@@ -54,11 +60,24 @@
   cursor:pointer;
 }
 
-.position-info{
-  font-size:12px;
-  color:#777;
-  margin-top:3px;
-}
+.position-info{font-size:12px;color:#777;margin-top:3px}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:18px 0 24px}
+.stats .card{border:1px solid var(--admin-line);border-radius:14px;padding:18px;box-shadow:0 5px 18px #3b1b1008}
+.stats .card b{display:block;font-size:clamp(24px,3vw,34px);color:var(--admin-red);line-height:1.2}
+.stats .card small{display:block;margin-top:7px;color:var(--admin-muted);font-weight:700}
+.section>h2,#dashboard>h2{color:var(--admin-red);margin-top:28px}
+.tableWrap{overflow:auto;border:1px solid var(--admin-line);border-radius:12px;background:#fff;margin:14px 0 22px}
+.tableWrap table{width:100%;border-collapse:separate;border-spacing:0;min-width:1500px}
+.tableWrap th{position:sticky;top:0;background:#74101a;color:#fff;text-align:left;padding:12px 11px;font-size:13px;white-space:nowrap}
+.tableWrap td{padding:12px 11px;border-bottom:1px solid #f0e8e1;vertical-align:top;font-size:13px;line-height:1.55}
+.tableWrap tr:nth-child(even) td{background:#fffaf6}
+.tableWrap tr:hover td{background:#fff3df}
+.admin-toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}
+.admin-toolbar input,.admin-toolbar select{padding:11px 12px;border:1px solid var(--admin-line);border-radius:9px;background:#fff;font:inherit;min-width:180px}
+.status-pill{display:inline-block;padding:4px 8px;border-radius:999px;font-size:11px;font-weight:800;white-space:nowrap}
+.status-pending{background:#fff0cf;color:#815600}.status-verified,.status-approved{background:#e0f6e7;color:#176536}.status-rejected{background:#ffe3e3;color:#991d1d}
+.payment-verify-btn,.approve-btn,.reject-btn{white-space:nowrap;margin:3px 2px}
+@media(max-width:700px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.tableWrap table{min-width:1500px}.admin-toolbar input,.admin-toolbar select{width:100%;box-sizing:border-box}}
 
 @media(max-width:700px){
   .tableWrap{
@@ -236,35 +255,21 @@
     </p>
 
 
+    <div class="admin-toolbar">
+      <input id="memberSearch" type="search" placeholder="नाम, ID, मोबाइल या Transaction ID खोजें" aria-label="सदस्य खोजें">
+      <select id="memberStatusFilter" aria-label="सदस्य स्थिति फ़िल्टर"><option value="all">सभी आवेदन</option><option value="pending">Pending</option><option value="approved">Approved</option><option value="rejected">Rejected</option></select>
+      <select id="paymentStatusFilter" aria-label="भुगतान स्थिति फ़िल्टर"><option value="all">सभी भुगतान</option><option value="pending">Payment Pending</option><option value="verified">Payment Verified</option><option value="rejected">Payment Rejected</option></select>
+      <button class="btn" type="button" onclick="loadMembers()">↻ Refresh</button>
+    </div>
+
     <div class="tableWrap">
-
       <table>
-
-        <thead>
-
-          <tr>
-            <th>ID</th>
-            <th>नाम</th>
-            <th>मोबाइल</th>
-            <th>जिला</th>
-            <th>स्थिति</th>
-            <th>₹5 Payment / Transaction</th>
-
-            <th>पार्टी स्तर</th>
-
-            <th>पद</th>
-
-            <th>Action</th>
-          </tr>
-
-        </thead>
-
-        <tbody id="members">
-
-        </tbody>
-
+        <thead><tr>
+          <th>Member ID</th><th>नाम / फोटो</th><th>मोबाइल</th><th>ईमेल</th><th>जिला</th><th>आवेदन तारीख</th>
+          <th>Transaction ID / UTR</th><th>Payment Status</th><th>राशि</th><th>Payment Verified At</th><th>सदस्य स्थिति</th><th>पार्टी स्तर</th><th>पद</th><th>कार्रवाई</th>
+        </tr></thead>
+        <tbody id="members"><tr><td colspan="14">आवेदन लोड हो रहे हैं...</td></tr></tbody>
       </table>
-
     </div>
 
 
@@ -283,7 +288,26 @@
 
 <script src="config.js"></script>
 
-<script src="app.js?v=position1"></script><script src="gallery-admin.js?v=1"></script>
+<script src="app.js?v=adminpro20261012"></script><script src="gallery-admin.js?v=1"></script>
+<script>
+(function(){
+  function filterMembers(){
+    const q=(document.getElementById('memberSearch')?.value||'').toLowerCase().trim();
+    const status=document.getElementById('memberStatusFilter')?.value||'all';
+    const payment=document.getElementById('paymentStatusFilter')?.value||'all';
+    document.querySelectorAll('#members tr').forEach(function(tr){
+      const t=tr.innerText.toLowerCase();
+      const statusMatch=status==='all'||t.includes(status);
+      const paymentMatch=payment==='all'||t.includes(payment);
+      tr.style.display=(!q||t.includes(q))&&statusMatch&&paymentMatch?'':'none';
+    });
+  }
+  document.getElementById('memberSearch')?.addEventListener('input',filterMembers);
+  document.getElementById('memberStatusFilter')?.addEventListener('change',filterMembers);
+  document.getElementById('paymentStatusFilter')?.addEventListener('change',filterMembers);
+  window.bjkpFilterMembers=filterMembers;
+})();
+</script>
 
 </body>
 </html>
